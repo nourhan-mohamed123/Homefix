@@ -1,8 +1,65 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
+import { API_ENDPOINTS, apiCall } from '../config/api';
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    rememberMe: false,
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      const response = await apiCall(API_ENDPOINTS.AUTH.LOGIN, {
+        method: 'POST',
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      // Store token if remember me is checked
+      if (formData.rememberMe && response.token) {
+        localStorage.setItem('authToken', response.token);
+      } else if (response.token) {
+        sessionStorage.setItem('authToken', response.token);
+      }
+
+      // Store user data
+      if (response.user) {
+        localStorage.setItem('user', JSON.stringify(response.user));
+      }
+
+      // Navigate based on user role
+      if (response.user?.role === 'provider') {
+        navigate('/provider-dashboard');
+      } else {
+        navigate('/');
+      }
+    } catch (err) {
+      setError(err.message || 'Login failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-homefix-secondary flex items-center justify-center p-6 py-12 font-['Poppins']">
       <div className="w-full max-w-4xl bg-homefix-bg shadow-2xl overflow-hidden flex flex-col rounded-[2rem]">
@@ -21,16 +78,26 @@ const Login = () => {
         </div>
 
         <div className="bg-white p-12 md:p-16 flex flex-col items-center">
-          <form className="w-full max-w-lg space-y-8">
+          <form onSubmit={handleSubmit} className="w-full max-w-lg space-y-8">
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                {error}
+              </div>
+            )}
+
             <div className="space-y-6">
               <div className="space-y-2">
                 <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide block ml-1 text-left">
-                  Username <span className="text-red-500">*</span>
+                  Email <span className="text-red-500">*</span>
                 </label>
                 <input
-                  type="text"
-                  placeholder="Enter your username"
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Enter your email"
                   className="w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all"
+                  required
                 />
               </div>
               <div className="space-y-2">
@@ -39,8 +106,12 @@ const Login = () => {
                 </label>
                 <input
                   type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   placeholder="••••••••"
                   className="w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all"
+                  required
                 />
               </div>
             </div>
@@ -50,20 +121,27 @@ const Login = () => {
                 <input
                   type="checkbox"
                   id="remember"
+                  name="rememberMe"
+                  checked={formData.rememberMe}
+                  onChange={handleChange}
                   className="w-4 h-4 accent-homefix-primary cursor-pointer"
                 />
                 <label htmlFor="remember" className="text-gray-600 text-sm font-semibold cursor-pointer select-none">
                   Remember me
                 </label>
               </div>
-              <Link to="/forgot-password" size="sm" className="text-homefix-accent text-sm font-bold hover:underline">
+              <Link to="/forgot-password" className="text-homefix-accent text-sm font-bold hover:underline">
                 Forgot?
               </Link>
             </div>
 
             <div className="flex flex-col items-center gap-8 pt-4">
-              <button className="bg-homefix-primary text-white px-20 py-4 text-lg font-black tracking-widest rounded-xl hover:bg-homefix-accent transition-all duration-300 shadow-lg shadow-homefix-primary/20 active:scale-95">
-                Login
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-homefix-primary text-white px-20 py-4 text-lg font-black tracking-widest rounded-xl hover:bg-homefix-accent transition-all duration-300 shadow-lg shadow-homefix-primary/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Logging in...' : 'Login'}
               </button>
 
               <div className="text-center space-y-4 pt-4 border-t border-gray-100 w-full">
@@ -81,4 +159,5 @@ const Login = () => {
     </div>
   );
 };
+
 export default Login;

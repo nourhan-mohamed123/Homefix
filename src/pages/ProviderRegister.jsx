@@ -30,7 +30,7 @@ export default function ProviderRegister() {
 
         hourlyRate: '',
         experience: '',
-        serviceArea: '',
+        serviceAreas: [],
 
         // Documents
         idDocument: null,
@@ -44,6 +44,13 @@ export default function ProviderRegister() {
         setFormData(prev => ({
             ...prev,
             [name]: value
+        }));
+    };
+
+    const handleServiceAreaChange = (newServiceAreas) => {
+        setFormData(prev => ({
+            ...prev,
+            serviceAreas: newServiceAreas
         }));
     };
 
@@ -151,6 +158,7 @@ export default function ProviderRegister() {
                         <BasicInfoForm
                             formData={formData}
                             handleChange={handleChange}
+                            handleServiceAreaChange={handleServiceAreaChange}
                             handleNext={handleNext}
                         />
                     ) : (

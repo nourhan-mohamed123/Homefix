@@ -1,7 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import { ChevronDown, X } from 'lucide-react';
 
-export default function BasicInfoForm({ formData, handleChange, handleNext }) {
+export default function BasicInfoForm({ formData, handleChange, handleServiceAreaChange, handleNext }) {
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+    const cities = [
+        "Cairo", "Giza", "Alexandria", "Shubra El Kheima", "Port Said", "Suez", "Luxor", "Mansoura",
+        "El-Mahalla El-Kubra", "Tanta", "Asyut", "Ismailia", "Fayyum", "Zagazig", "Aswan", "Damietta",
+        "Damanhur", "Minya", "Beni Suef", "Qena", "Sohag", "Hurghada", "6th of October", "Shibin El Kom",
+        "Banha", "Kafr el-Sheikh", "Arish", "Mallawi", "10th of Ramadan", "Bilbais", "Marsa Matruh"
+    ];
+
+    const toggleCity = (city) => {
+        const currentAreas = formData.serviceAreas || [];
+        if (currentAreas.includes(city)) {
+            handleServiceAreaChange(currentAreas.filter(c => c !== city));
+        } else {
+            handleServiceAreaChange([...currentAreas, city]);
+        }
+    };
+
+    const removeCity = (city) => {
+        const currentAreas = formData.serviceAreas || [];
+        handleServiceAreaChange(currentAreas.filter(c => c !== city));
+    };
+
     const professions = [
         'Plumber', 'Electrician', 'Carpenter', 'Painter',
         'Cleaner', 'HVAC Technician', 'Landscaper', 'Roofer'
@@ -64,6 +88,22 @@ export default function BasicInfoForm({ formData, handleChange, handleNext }) {
                     />
                 </div>
 
+                {/* Address */}
+                <div className="space-y-2">
+                    <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
+                        Address <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="address"
+                        value={formData.address}
+                        onChange={handleChange}
+                        className="w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all text-left"
+                        placeholder="Enter your address"
+                        required
+                    />
+                </div>
+
                 {/* Password */}
                 <div className="space-y-2">
                     <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
@@ -98,71 +138,78 @@ export default function BasicInfoForm({ formData, handleChange, handleNext }) {
                     />
                 </div>
 
-                {/* Address */}
-                <div className="space-y-2">
-                    <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                        Address <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        name="address"
-                        value={formData.address}
-                        onChange={handleChange}
-                        className="w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all text-left"
-                        placeholder="Enter your address"
-                        required
-                    />
-                </div>
 
-                {/* City */}
-                <div className="space-y-2">
-                    <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                        City <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                        type="text"
-                        name="city"
-                        value={formData.city}
-                        onChange={handleChange}
-                        className="w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all text-left"
-                        placeholder="Enter your city"
-                        required
-                    />
-                </div>
 
-    
 
-                {/* Service Area */}
-                <div className="space-y-2">
+
+                {/* Service Areas - Multi Select */}
+                <div className="space-y-2 relative md:col-span-2">
                     <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                        Service Area <span className="text-red-500">*</span>
+                        Service Areas <span className="text-red-500">*</span>
                     </label>
-                    <input
-                        type="text"
-                        name="serviceArea"
-                        value={formData.serviceArea}
-                        onChange={handleChange}
-                        className="w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all text-left"
-                        placeholder="e.g. Downtown, Uptown"
-                        required
-                    />
+
+                    <div className="relative">
+                        <div
+                            className="w-full bg-gray-50 px-5 py-4 min-h-[58px] rounded-2xl border border-gray-200 focus-within:border-homefix-accent focus-within:ring-1 focus-within:ring-homefix-accent cursor-pointer flex flex-wrap gap-2 items-center"
+                            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                        >
+                            {formData.serviceAreas && formData.serviceAreas.length > 0 ? (
+                                formData.serviceAreas.map(area => (
+                                    <span key={area} className="bg-homefix-primary/10 text-homefix-primary px-3 py-1 rounded-lg text-sm font-semibold flex items-center gap-1">
+                                        {area}
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                removeCity(area);
+                                            }}
+                                            className="hover:text-red-500 transition-colors"
+                                        >
+                                            <X size={14} />
+                                        </button>
+                                    </span>
+                                ))
+                            ) : (
+                                <span className="text-gray-400 font-medium">Select cities...</span>
+                            )}
+
+                            <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none">
+                                <ChevronDown
+                                    className={`text-gray-400 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}
+                                    size={20}
+                                />
+                            </div>
+                        </div>
+
+                        {isDropdownOpen && (
+                            <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 max-h-[300px] overflow-y-auto z-50 p-2">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
+                                    {cities.map(city => (
+                                        <button
+                                            key={city}
+                                            type="button"
+                                            onClick={() => toggleCity(city)}
+                                            className={`px-4 py-3 rounded-xl text-left font-medium transition-all flex items-center justify-between group ${formData.serviceAreas?.includes(city)
+                                                ? 'bg-homefix-primary text-white shadow-md shadow-homefix-primary/20'
+                                                : 'hover:bg-gray-50 text-gray-700'
+                                                }`}
+                                        >
+                                            {city}
+                                            {formData.serviceAreas?.includes(city) && <span className="bg-white/20 p-1 rounded-full"><X size={12} /></span>}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    {/* Backdrop to close dropdown */}
+                    {isDropdownOpen && (
+                        <div className="fixed inset-0 z-40" onClick={() => setIsDropdownOpen(false)}></div>
+                    )}
                 </div>
 
                 {/* Bio */}
-                <div className="md:col-span-2 space-y-2">
-                    <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                        Bio <span className="text-red-500">*</span>
-                    </label>
-                    <textarea
-                        name="bio"
-                        value={formData.bio}
-                        onChange={handleChange}
-                        rows="4"
-                        className="w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all resize-none text-left"
-                        placeholder="Tell us about yourself..."
-                        required
-                    />
-                </div>
+
             </div>
 
             {/* Next Button */}

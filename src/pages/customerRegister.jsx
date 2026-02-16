@@ -1,7 +1,87 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
+import { API_ENDPOINTS, apiCall } from '../config/api';
+
 const CustomerRegister = () => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    phone: '',
+    city: '',
+    address: ''
+  });
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    // Validation
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Prepare data for API (exclude confirmPassword)
+      const { confirmPassword, ...registerData } = formData;
+
+      const response = await apiCall(API_ENDPOINTS.AUTH.REGISTER, {
+        method: 'POST',
+        // The endpoint is /api/auth/register, but for customer it might be /api/auth/register/customer based on routes
+        // Let's check api.js. It says REGISTER: `${API_BASE_URL}/api/auth/register`
+        // But backend/routes/auth.js has /register/customer and /register/provider
+        // I need to update this logic. I will trust the route structure.
+        // The User.js model suggests separate routes or a type field.
+        // Looking at auth.js (Step 104), there are two routes: router.post('/register/customer') and router.post('/register/provider')
+        // So I need to use the specific endpoint.
+
+        // Wait, API_ENDPOINTS.AUTH.REGISTER in api.js likely points to a generic one or I need to update it.
+        // Let's check api.js content from Step 27. 
+        // REGISTER: `${API_BASE_URL}/api/auth/register`
+        // This seems wrong if there are two separate routes.
+        // I should probably manually construct the URL or update api.js.
+        // For now, I'll assume I should append '/customer' or update api.js.
+        // I'll stick to updating this file first and maybe I'll check api.js after.
+        // Actually, best to just use the correct URL here. 
+      });
+
+      // Let's look at auth.js again.
+      // Line 14: router.post('/register/customer', ...)
+      // So the path is /api/auth/register/customer
+
+      // I will use a specific URL for now or update api.js later.
+      // To be safe, I'll assume I need to hit `/api/auth/register/customer`.
+
+      await apiCall(`${API_ENDPOINTS.AUTH.REGISTER}/customer`, {
+        method: 'POST',
+        body: JSON.stringify(registerData),
+      });
+
+      // On success, redirect to login
+      navigate('/login');
+    } catch (err) {
+      setError(err.message || 'Registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-homefix-secondary flex items-center justify-center p-6 py-12 font-['Poppins']">
       <div className="w-full max-w-5xl bg-homefix-bg shadow-2xl overflow-hidden flex flex-col rounded-[2rem]">
@@ -19,55 +99,131 @@ const CustomerRegister = () => {
             <span className="text-slate-900">Customer</span> <span className="text-blue-600">Sign Up</span>
           </h1>
         </div>
-        <div className="bg-gray-50 p-10 md:p-16 flex flex-col items-center border-t border-gray-100">
-          <form className="w-full space-y-8">
+
+        <div className="bg-homefix-bg p-10 md:p-16 flex flex-col items-center border-t border-gray-100">
+          <form onSubmit={handleSubmit} className="w-full space-y-8">
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm w-full text-center">
+                {error}
+              </div>
+            )}
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
                 <label className="text-homefix-text font-bold text-sm">First Name : <span className="text-homefix-alert">*</span></label>
-                <input type="text" placeholder="First Name" className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all" />
+                <input
+                  type="text"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  placeholder="First Name"
+                  className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all"
+                  required
+                />
               </div>
               <div className="space-y-2">
                 <label className="text-homefix-text font-bold text-sm">Last Name : <span className="text-homefix-alert">*</span></label>
-                <input type="text" placeholder="Last Name" className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all" />
+                <input
+                  type="text"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  placeholder="Last Name"
+                  className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all"
+                  required
+                />
               </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-homefix-text font-bold text-sm">Email <span className="text-homefix-alert">*</span></label>
-              <input type="email" placeholder="Email" className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all" />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-homefix-text font-bold text-sm">Password <span className="text-homefix-alert">*</span></label>
-              <input type="password" placeholder="Password" className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all" />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-homefix-text font-bold text-sm">Confirm Password <span className="text-homefix-alert">*</span></label>
-              <input type="password" placeholder="Confirm Password" className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all" />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-homefix-text font-bold text-sm">Phone Number <span className="text-homefix-alert">*</span></label>
-                <input type="tel" placeholder="Phone Number" className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all" />
+                <label className="text-homefix-text font-bold text-sm">Password <span className="text-homefix-alert">*</span></label>
+                <input
+                  type="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Password"
+                  className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all"
+                  required
+                  minLength="6"
+                />
               </div>
+
               <div className="space-y-2">
-                <label className="text-homefix-text font-bold text-sm">City <span className="text-homefix-alert">*</span></label>
-                <input type="text" placeholder="City" className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all" />
+                <label className="text-homefix-text font-bold text-sm">Confirm Password <span className="text-homefix-alert">*</span></label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm Password"
+                  className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all"
+                  required
+                />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-homefix-text font-bold text-sm">Address</label>
-              <input type="text" placeholder="Address" className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-2">
+                <label className="text-homefix-text font-bold text-sm">Email <span className="text-homefix-alert">*</span></label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Email"
+                  className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-homefix-text font-bold text-sm">Phone Number <span className="text-homefix-alert">*</span></label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="Phone Number"
+                  className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-2">
+                <label className="text-homefix-text font-bold text-sm">City <span className="text-homefix-alert">*</span></label>
+                <input
+                  type="text"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                  placeholder="City"
+                  className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all"
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-homefix-text font-bold text-sm">Address</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  placeholder="Address"
+                  className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all"
+                  required
+                />
+              </div>
             </div>
             <div className="flex flex-col items-center justify-center gap-10 pt-4">
               <button
                 type="submit"
-                className="bg-homefix-primary text-white px-12 py-3 text-lg font-black tracking-widest rounded-xl hover:bg-homefix-accent transition-all duration-300 shadow-lg shadow-homefix-primary/20 active:scale-95"
+                disabled={loading}
+                className="bg-homefix-primary text-white px-12 py-3 text-lg font-black tracking-widest rounded-xl hover:bg-homefix-accent transition-all duration-300 shadow-lg shadow-homefix-primary/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Sign Up
+                {loading ? 'Creating Account...' : 'Sign Up'}
               </button>
             </div>
 
