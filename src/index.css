@@ -4,6 +4,13 @@
 
 @layer base {
   body {
-    @apply font-['Poppins'] bg-homefix-bg text-homefix-primary;
+    @apply bg-white text-[#111827] antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-bold text-[#1e3a8a];
   }
 }
