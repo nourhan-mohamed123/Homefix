@@ -38,37 +38,19 @@ const CustomerRegister = () => {
     setLoading(true);
 
     try {
-      // Prepare data for API (exclude confirmPassword)
-      const { confirmPassword, ...registerData } = formData;
+      // Map formData to backend entities (users model: first_name, last_name, email, password, address, account_type)
+      // Backend expects: firstname, lastname, email, password, cityOrCities (array), account_type, address
+      const registerData = {
+        firstname: formData.firstName,
+        lastname: formData.lastName,
+        email: formData.email,
+        password: formData.password,
+        cityOrCities: [formData.city],
+        account_type: 'customer',
+        address: formData.address || null,
+      };
 
-      const response = await apiCall(API_ENDPOINTS.AUTH.REGISTER, {
-        method: 'POST',
-        // The endpoint is /api/auth/register, but for customer it might be /api/auth/register/customer based on routes
-        // Let's check api.js. It says REGISTER: `${API_BASE_URL}/api/auth/register`
-        // But backend/routes/auth.js has /register/customer and /register/provider
-        // I need to update this logic. I will trust the route structure.
-        // The User.js model suggests separate routes or a type field.
-        // Looking at auth.js (Step 104), there are two routes: router.post('/register/customer') and router.post('/register/provider')
-        // So I need to use the specific endpoint.
-
-        // Wait, API_ENDPOINTS.AUTH.REGISTER in api.js likely points to a generic one or I need to update it.
-        // Let's check api.js content from Step 27. 
-        // REGISTER: `${API_BASE_URL}/api/auth/register`
-        // This seems wrong if there are two separate routes.
-        // I should probably manually construct the URL or update api.js.
-        // For now, I'll assume I should append '/customer' or update api.js.
-        // I'll stick to updating this file first and maybe I'll check api.js after.
-        // Actually, best to just use the correct URL here. 
-      });
-
-      // Let's look at auth.js again.
-      // Line 14: router.post('/register/customer', ...)
-      // So the path is /api/auth/register/customer
-
-      // I will use a specific URL for now or update api.js later.
-      // To be safe, I'll assume I need to hit `/api/auth/register/customer`.
-
-      await apiCall(`${API_ENDPOINTS.AUTH.REGISTER}/customer`, {
+      await apiCall(API_ENDPOINTS.AUTH.SIGNUP, {
         method: 'POST',
         body: JSON.stringify(registerData),
       });

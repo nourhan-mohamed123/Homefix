@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
 import TabNavigation from '../components/provider-register/TabNavigation';
 import BasicInfoForm from '../components/provider-register/BasicInfoForm';
 import ServicesInfoForm from '../components/provider-register/ServicesInfoForm';
 import Logo from '../components/Logo';
 import FinalConfirmationModal from '../components/provider-register/FinalConfirmationModal';
+import { API_ENDPOINTS, apiCall } from '../config/api';
 
 export default function ProviderRegister() {
     const navigate = useNavigate();
@@ -15,7 +15,7 @@ export default function ProviderRegister() {
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
     const [formData, setFormData] = useState({
-        // Basic Information
+        // Basic Information (matches backend users model: first_name, last_name, email, password, address)
         name: '',
         profession: '',
         email: '',
@@ -38,6 +38,8 @@ export default function ProviderRegister() {
     });
 
     const [selectedDays, setSelectedDays] = useState([]);
+    const [registerError, setRegisterError] = useState('');
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -122,11 +124,42 @@ export default function ProviderRegister() {
         setIsConfirmOpen(true);
     };
 
-    const handleFinalConfirm = () => {
-        console.log('Final Form Data:', formData);
-        console.log('Final Services:', services);
-        alert('Provider registration submitted successfully!');
-        navigate('/provider-dashboard');
+    const handleFinalConfirm = async () => {
+        setRegisterError('');
+        const cities = formData.serviceAreas?.length ? formData.serviceAreas : (formData.city ? [formData.city] : []);
+        if (!cities.length) {
+            setRegisterError('Please select at least one service area or city.');
+            return;
+        }
+        setIsSubmitting(true);
+        try {
+            // Map formData to backend entities (users model: first_name, last_name, email, password, address)
+            // Backend expects: firstname, lastname, email, password, cityOrCities (array), account_type, address
+            const nameParts = (formData.name || '').trim().split(/\s+/);
+            const firstname = nameParts[0] || '';
+            const lastname = nameParts.slice(1).join(' ') || nameParts[0] || '';
+
+            const registerData = {
+                firstname,
+                lastname,
+                email: formData.email,
+                password: formData.password,
+                cityOrCities: cities,
+                account_type: 'provider',
+                address: formData.address || null,
+            };
+
+            await apiCall(API_ENDPOINTS.AUTH.SIGNUP, {
+                method: 'POST',
+                body: JSON.stringify(registerData),
+            });
+
+            navigate('/provider-dashboard');
+        } catch (err) {
+            setRegisterError(err.message || 'Registration failed. Please try again.');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -193,7 +226,9 @@ export default function ProviderRegister() {
                 isOpen={isConfirmOpen}
                 formData={formData}
                 onConfirm={handleFinalConfirm}
-                onCancel={() => setIsConfirmOpen(false)}
+                onCancel={() => { setIsConfirmOpen(false); setRegisterError(''); }}
+                error={registerError}
+                isSubmitting={isSubmitting}
             />
         </div>
     );

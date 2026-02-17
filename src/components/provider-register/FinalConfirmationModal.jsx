@@ -2,7 +2,7 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ShieldCheck, Edit3, ArrowRight, X } from 'lucide-react';
 
-export default function FinalConfirmationModal({ isOpen, formData, onConfirm, onCancel }) {
+export default function FinalConfirmationModal({ isOpen, formData, onConfirm, onCancel, error, isSubmitting }) {
     const dataPoints = [
         { label: 'Full Name', value: formData.name, icon: <Check className="w-3 h-3 text-emerald-500" /> },
         { label: 'Profession', value: formData.profession, icon: <Check className="w-3 h-3 text-emerald-500" /> },
@@ -47,6 +47,12 @@ export default function FinalConfirmationModal({ isOpen, formData, onConfirm, on
                                 <p className="text-slate-400 font-medium mt-1">Double-check before we finalize</p>
                             </div>
 
+                            {error && (
+                                <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                                    {error}
+                                </div>
+                            )}
+
                             {/* Summary Grid */}
                             <div className="grid grid-cols-1 gap-3 mb-10">
                                 {dataPoints.map((item, index) => (
@@ -66,9 +72,10 @@ export default function FinalConfirmationModal({ isOpen, formData, onConfirm, on
                             <div className="space-y-3">
                                 <button
                                     onClick={onConfirm}
-                                    className="w-full bg-slate-900 hover:bg-homefix-primary text-white font-black py-5 px-6 rounded-2xl transition-all duration-300 shadow-xl shadow-slate-200 flex items-center justify-center gap-3 active:scale-[0.98]"
+                                    disabled={isSubmitting}
+                                    className="w-full bg-slate-900 hover:bg-homefix-primary text-white font-black py-5 px-6 rounded-2xl transition-all duration-300 shadow-xl shadow-slate-200 flex items-center justify-center gap-3 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    CONFIRM & COMPLETE
+                                    {isSubmitting ? 'Creating Account...' : 'CONFIRM & COMPLETE'}
                                     <ArrowRight className="w-5 h-5" />
                                 </button>
 

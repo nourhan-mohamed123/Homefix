@@ -35,21 +35,16 @@ const Login = () => {
         }),
       });
 
-      // Store token if remember me is checked
-      if (formData.rememberMe && response.token) {
-        localStorage.setItem('authToken', response.token);
-      } else if (response.token) {
-        sessionStorage.setItem('authToken', response.token);
-      }
-
-      // Store user data
-      if (response.user) {
-        localStorage.setItem('user', JSON.stringify(response.user));
-      }
+      // Backend sets JWT in httpOnly cookie; response contains { id, name, email, role }
+      const user = { id: response.id, name: response.name, email: response.email, role: response.role };
+      const storage = formData.rememberMe ? localStorage : sessionStorage;
+      storage.setItem('user', JSON.stringify(user));
 
       // Navigate based on user role
-      if (response.user?.role === 'provider') {
+      if (response.role === 'provider') {
         navigate('/provider-dashboard');
+      } else if (response.role === 'admin') {
+        navigate('/');
       } else {
         navigate('/');
       }
