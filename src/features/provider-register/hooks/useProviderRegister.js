@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { API_ENDPOINTS, apiCall } from '../../../../config/api';
+import { API_ENDPOINTS, apiCall } from '../../../config/api';
 
 export const useProviderRegister = () => {
     const navigate = useNavigate();

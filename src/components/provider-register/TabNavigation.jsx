@@ -23,7 +23,6 @@ export default function TabNavigation({ activeTab, setActiveTab }) {
                     >
                         {tab.label}
                         
-                        {/* خط المؤشر المتحرك */}
                         {isActive && (
                             <motion.div 
                                 layoutId="activeTab"

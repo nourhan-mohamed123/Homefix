@@ -52,10 +52,8 @@ export default function ProviderRegister() {
                     </h1>
                 </div>
 
-                {/* Tab Navigation */}
                 <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
 
-                {/* Main Content Area */}
                 <div className="bg-white p-8">
                     <motion.div
                         key={activeTab}
@@ -93,8 +91,6 @@ export default function ProviderRegister() {
                     </div>
                 </div>
             </div>
-
-            {/* Modals outside the layout structure */}
             <FinalConfirmationModal
                 isOpen={isConfirmOpen}
                 formData={formData}

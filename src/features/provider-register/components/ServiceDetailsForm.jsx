@@ -11,7 +11,6 @@ export const ServiceDetailsForm = ({
 }) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-            {/* Category */}
             <div className="flex flex-col gap-2">
                 <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Category <span className="text-red-500">*</span></label>
                 <select
@@ -27,7 +26,6 @@ export const ServiceDetailsForm = ({
                 </select>
             </div>
 
-            {/* Sub-Category */}
             <div className="flex flex-col gap-2">
                 <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Sub-Category <span className="text-red-500">*</span></label>
                 <select
@@ -44,7 +42,6 @@ export const ServiceDetailsForm = ({
                 </select>
             </div>
 
-            {/* Service Name */}
             <div className="flex flex-col gap-2">
                 <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Service Name <span className="text-red-500">*</span></label>
                 <select
@@ -61,7 +58,6 @@ export const ServiceDetailsForm = ({
                 </select>
             </div>
 
-            {/* Price Type */}
             <div className="flex flex-col gap-2">
                 <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Price Type <span className="text-red-500">*</span></label>
                 <select
@@ -78,7 +74,6 @@ export const ServiceDetailsForm = ({
                 </select>
             </div>
 
-            {/* Price */}
             <div className="flex flex-col gap-2">
                 <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Price <span className="text-red-500">*</span></label>
                 <input
@@ -92,7 +87,6 @@ export const ServiceDetailsForm = ({
                 />
             </div>
 
-            {/* Commission (Read Only) */}
             <div className="flex flex-col gap-2">
                 <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Commission</label>
                 <div className="p-3 bg-slate-900 text-white font-bold rounded-xl border border-slate-800 opacity-80 cursor-not-allowed">
@@ -100,20 +94,6 @@ export const ServiceDetailsForm = ({
                 </div>
             </div>
 
-            {/* Description */}
-            <div className="flex flex-col gap-2 md:col-span-1">
-                <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Description <span className="text-red-500">*</span></label>
-                <textarea
-                    name="description"
-                    value={data.description}
-                    onChange={onUpdate}
-                    rows="1"
-                    className="p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-homefix-primary outline-none transition-all resize-none"
-                    placeholder="Brief description of the service..."
-                />
-            </div>
-
-            {/* Service Image */}
             <div className="flex flex-col gap-2 md:col-span-1">
                 <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Service Image</label>
                 <div className="relative flex">
@@ -135,8 +115,6 @@ export const ServiceDetailsForm = ({
                     </label>
                 </div>
             </div>
-
-            {/* Availability Toggle */}
             <div className="md:col-span-2 flex items-center gap-3 pt-2">
                 <div className="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full border border-gray-300 cursor-pointer">
                     <input

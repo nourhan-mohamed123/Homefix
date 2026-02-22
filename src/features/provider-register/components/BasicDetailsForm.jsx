@@ -21,9 +21,9 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
             setErrors(prev => ({ ...prev, phone: 'Phone number must be exactly 11 digits' }));
         } else {
             setErrors(prev => {
-                const new = { ...prev };
-                delete new.phone;
-                return new;
+                const updatedErrors = { ...prev };
+                delete updatedErrors.phone;
+                return updatedErrors;
             });
         }
     };
@@ -34,9 +34,9 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
             setErrors(prev => ({ ...prev, confirmPassword: 'Passwords do not match' }));
         } else {
             setErrors(prev => {
-                const new = { ...prev };
-                delete new.confirmPassword;
-                return new;
+                const updatedErrors = { ...prev };
+                delete updatedErrors.confirmPassword;
+                return updatedErrors;
             });
         }
     };
@@ -64,7 +64,6 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
             className="space-y-6"
         >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Name */}
                 <div className="flex flex-col gap-2">
                     <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Name <span className="text-red-500">*</span></label>
                     <input
@@ -76,7 +75,6 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                     />
                 </div>
 
-                {/* Email */}
                 <div className="flex flex-col gap-2">
                     <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Email <span className="text-red-500">*</span></label>
                     <input
@@ -89,7 +87,6 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                     />
                 </div>
 
-                {/* Phone */}
                 <div className="flex flex-col gap-2">
                     <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Phone <span className="text-red-500">*</span></label>
                     <input

@@ -27,55 +27,54 @@ export default function CustomerReviews() {
     ];
 
     return (
-        <section id="reviews" className="px-6 py-20 md:px-20 lg:px-40 bg-white">
+        <section id="reviews" className="px-6 py-24 md:px-20 lg:px-40 bg-homefix-bg font-['Poppins']">
             <div className="text-center mb-16">
-                <h2 className="text-3xl md:text-4xl font-extrabold text-homefix-text mb-4 tracking-tight">
-                    What our customers are saying
+                <p className="text-homefix-accent text-xs font-black uppercase tracking-widest mb-3">Customer Voices</p>
+                <h2 className="text-3xl md:text-5xl font-black text-homefix-text mb-4 tracking-tight">
+                    What our <span className="text-homefix-primary">customers</span> say
                 </h2>
-                <div className="flex items-center justify-center gap-1.5 text-homefix-primary mb-4">
+                <div className="flex items-center justify-center gap-1.5 text-yellow-500 mb-4">
                     {[...Array(5)].map((_, i) => (
                         <Star key={i} className="w-5 h-5 fill-current" />
                     ))}
-                    <span className="ml-2 text-homefix-text font-bold">4.9/5</span>
+                    <span className="ml-2 text-homefix-text font-black text-base">4.9/5</span>
                 </div>
-                <p className="text-homefix-text/60 max-w-2xl mx-auto text-base">
+                <p className="text-gray-400 max-w-2xl mx-auto text-base font-light">
                     Join thousands of satisfied homeowners who trust HomeFix for their daily needs.
                 </p>
             </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 {reviews.map((review, index) => (
                     <div
                         key={index}
-                        className="group bg-white rounded-3xl p-8 border border-homefix-secondary shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                        className="group bg-white rounded-[2rem] p-8 border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(30,58,138,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col"
                     >
-                        <div className="flex gap-1 mb-6">
+                        <div className="flex gap-1 mb-5">
                             {[...Array(review.rating)].map((_, i) => (
-                                <Star key={i} className="w-4 h-4 fill-current text-homefix-primary" />
+                                <Star key={i} className="w-4 h-4 fill-current text-yellow-400" />
                             ))}
                         </div>
-
-                        <p className="text-homefix-text/80 text-sm leading-relaxed mb-8 italic">
-                            "{review.comment}"
+                        <p className="text-homefix-text/70 text-sm leading-relaxed flex-1 mb-8 font-medium">
+                            &ldquo;{review.comment}&rdquo;
                         </p>
-                        <div className="flex items-center gap-4 border-t border-homefix-secondary pt-6">
+                        <div className="flex items-center gap-4 border-t border-gray-100 pt-6">
                             <img
                                 src={review.avatar}
                                 alt={review.name}
                                 className="w-12 h-12 rounded-2xl object-cover ring-2 ring-homefix-primary/10"
                             />
                             <div>
-                                <h4 className="font-bold text-homefix-text text-sm">{review.name}</h4>
-                                <p className="text-xs font-medium text-homefix-primary">{review.service}</p>
+                                <h4 className="font-black text-homefix-text text-sm">{review.name}</h4>
+                                <p className="text-xs font-bold text-homefix-accent mt-0.5">{review.service}</p>
                             </div>
                         </div>
                     </div>
                 ))}
             </div>
-            <div className="mt-16 flex justify-center">
-                <div className="inline-flex items-center gap-2 bg-homefix-secondary/30 px-6 py-3 rounded-2xl">
-                    <span className="material-symbols-outlined text-homefix-primary">verified_user</span>
-                    <span className="text-homefix-text text-sm font-semibold">100% Verified Customer Feedback</span>
+            <div className="mt-14 flex justify-center">
+                <div className="inline-flex items-center gap-2.5 bg-white border border-gray-100 px-6 py-3 rounded-2xl shadow-sm">
+                    <span className="material-symbols-outlined text-homefix-primary text-base">verified_user</span>
+                    <span className="text-homefix-text text-sm font-bold">100% Verified Customer Feedback</span>
                 </div>
             </div>
         </section>

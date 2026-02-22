@@ -35,7 +35,6 @@ const Login = () => {
         }),
       });
 
-      // Backend sets JWT in httpOnly cookie; response contains { id, name, email, role }
       const user = { id: response.id, name: response.name, email: response.email, role: response.role };
       const storage = formData.rememberMe ? localStorage : sessionStorage;
       storage.setItem('user', JSON.stringify(user));

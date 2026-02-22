@@ -76,15 +76,13 @@ export const ServicesManager = ({
     const [editingId, setEditingId] = useState(null);
     const [currentDay, setCurrentDay] = useState(null);
 
-    // --- Derived State for Dropdowns ---
     const categories = Object.keys(fullCategoryData);
     const subCategories = currentService.category ? Object.keys(fullCategoryData[currentService.category] || {}) : [];
     const serviceOptions = (currentService.category && currentService.subCategory)
         ? (fullCategoryData[currentService.category]?.[currentService.subCategory] || [])
         : [];
 
-    // --- Handlers ---
-    const handleServiceChange = (e) => {
+        const handleServiceChange = (e) => {
         const { name, value, type, checked } = e.target;
         setCurrentService(prev => {
             const newState = {
@@ -184,8 +182,6 @@ export const ServicesManager = ({
                 <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
                     {editingId ? 'Edit Service' : 'Add New Service'}
                 </h3>
-
-                {/* 1. The Clean Service Form */}
                 <ServiceDetailsForm
                     data={currentService}
                     onUpdate={handleServiceChange}
@@ -194,8 +190,6 @@ export const ServicesManager = ({
                     subCategories={subCategories}
                     serviceOptions={serviceOptions}
                 />
-
-                {/* 2. Days Logic (kept here as it's more interactive/complex) */}
                 {!currentService.alwaysAvailable && (
                     <div className="mt-8">
                         <label className="block text-gray-700 font-bold mb-3 uppercase tracking-wide text-sm">
@@ -229,7 +223,6 @@ export const ServicesManager = ({
                         </div>
                     </div>
                 )}
-
                 <div className="mt-8 flex justify-end">
                     <button
                         type="button"
@@ -240,8 +233,6 @@ export const ServicesManager = ({
                     </button>
                 </div>
             </div>
-
-            {/* 3. List of Added Services */}
             {services.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                     {services.map(service => (
@@ -254,8 +245,6 @@ export const ServicesManager = ({
                     ))}
                 </div>
             )}
-
-            {/* Navigation Buttons */}
             <div className="flex justify-end gap-4 pt-6 border-t border-gray-100">
                 <button
                     type="button"
@@ -269,10 +258,9 @@ export const ServicesManager = ({
                     onClick={onSubmit}
                     className="bg-homefix-primary text-white px-10 py-3 font-bold rounded-xl hover:bg-homefix-accent transition-all shadow-lg shadow-homefix-primary/20 active:scale-95"
                 >
-                    Submit Registration
+                    Save & Continue
                 </button>
             </div>
-
             <TimeSlotsModal
                 isOpen={isTimeSlotsModalOpen}
                 day={currentDay}

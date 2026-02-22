@@ -84,12 +84,10 @@ export default function ServicesInfoForm({
                 ...prev,
                 [name]: type === 'checkbox' ? checked : value
             };
-            // Level 1: Reset Sub-category and Service if Category changes
             if (name === 'category') {
                 newState.subCategory = '';
                 newState.serviceName = '';
             }
-            // Level 2: Reset Service if Sub-category changes
             if (name === 'subCategory') {
                 newState.serviceName = '';
             }
