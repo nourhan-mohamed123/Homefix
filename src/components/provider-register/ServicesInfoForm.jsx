@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { Upload, Plus, Edit2, Trash2, Clock } from 'lucide-react';
 import ServiceCard from './ServiceCard';
 import TimeSlotsModal from './TimeSlotsModal';
-
 export default function ServicesInfoForm({
     formData,
     handleChange: handleGlobalChange,
@@ -27,22 +26,76 @@ export default function ServicesInfoForm({
         alwaysAvailable: false,
         days: []
     });
-
     const [isTimeSlotsModalOpen, setIsTimeSlotsModalOpen] = useState(false);
     const [editingId, setEditingId] = useState(null);
     const [currentDayForTimeSlots, setCurrentDayForTimeSlots] = useState(null);
-
-    const categories = ['Plumbing', 'Electrical', 'Carpentry', 'Painting', 'Cleaning', 'HVAC'];
+    // 3-Level Data Structure: Category -> Sub-category -> Services
+    const fullCategoryData = {
+        'Plumbing': {
+            'Pipe Installation': ['New Pipe Setup', 'Pipe Replacement', 'Pipe Insulation', 'Gas Pipe Installation'],
+            'Leak Repair': ['Faucet Leak Fix', 'Pipe Leak Sealing', 'Shower Leak Repair', 'Toilet Leak Fix'],
+            'Drain Cleaning': ['Kitchen Sink Unclogging', 'Bathroom Drain Cleaning', 'Main Sewer Line Cleaning', 'Floor Drain Cleaning'],
+            'Water Heater Repair': ['Tankless Water Heater Fix', 'Electric Heater Repair', 'Gas Heater Maintenance', 'Thermostat Replacement'],
+            'Toilet Repair': ['Flush Mechanism Repair', 'Toilet Seat Replacement', 'Clog Removal', 'Seal Replacement']
+        },
+        'Electrical': {
+            'Wiring & Rewiring': ['House Rewiring', 'New Circuit Installation', 'Wiring Repair', 'Socket Rewiring'],
+            'Lighting Installation': ['Chandelier Installation', 'LED Light Setup', 'Outdoor Lighting', 'Recessed Lighting'],
+            'Panel Upgrades': ['Fuse Box Replacement', 'Circuit Breaker Upgrade', 'Heavy Load Panel Upgrade', 'Grounding Installation'],
+            'Outlet & Switch Repair': ['Faulty Outlet Fix', 'Switch Replacement', 'GFCI Outlet Installation', 'Dimmer Switch Setup'],
+            'Ceiling Fan Installation': ['New Fan Assembly', 'Old Fan Replacement', 'Fan Balancing', 'Fan Wiring Fix']
+        },
+        'Carpentry': {
+            'Furniture Assembly': ['IKEA Furniture Assembly', 'Custom Table Assembly', 'Bed Frame Setup', 'Wardrobe Assembly'],
+            'Cabinet Installation': ['Kitchen Cabinet Hanging', 'Bathroom Vanity Installation', 'Custom Cabinet Building', 'Cabinet Door Alignment'],
+            'Door Repair': ['Hinge Replacement', 'Door Frame Repair', 'Lock Installation', 'Sliding Door Fix'],
+            'Window Frame Repair': ['Rotten Wood Replacement', 'Frame Sealing', 'Window Sill Repair', 'Sash Replacement'],
+            'Custom Shelving': ['Floating Shelf Installation', 'Bookcase Building', 'Closet Organization System', 'Garage Shelving']
+        },
+        'Painting': {
+            'Interior Painting': ['Wall Painting', 'Ceiling Painting', 'Trim & Molding Painting', 'Accent Wall'],
+            'Exterior Painting': ['House Siding Painting', 'Fence Painting', 'Garage Door Painting', 'Deck Painting'],
+            'Wall Papering': ['Wallpaper Installation', 'Wallpaper Removal', 'Wall Texture Application', 'Border Application'],
+            'Deck Staining': ['Deck Cleaning & Staining', 'railing Staining', 'Sealant Application', 'Color Refinishing'],
+            'Cabinet Painting': ['Kitchen Cabinet Refinishing', 'Bathroom Cabinet Painting', 'Custom Color Spraying', 'Gloss Finish Application']
+        },
+        'Cleaning': {
+            'Deep Cleaning': ['Full Home Deep Clean', 'Kitchen Deep Clean', 'Bathroom Sanitization', 'Post-Construction Clean'],
+            'Carpet Cleaning': ['Steam Cleaning', 'Stain Removal', 'Odor Neutralization', 'Rug Deep Clean'],
+            'Window Cleaning': ['Interior Window Wipe', 'Exterior Window Wash', 'Screen Cleaning', 'Track Cleaning'],
+            'Move-in/Move-out Cleaning': ['Apartment Turnover', 'End of Tenancy Clean', 'New Home Sanitization', 'Garage Sweep'],
+            'Upholstery Cleaning': ['Sofa Steam Clean', 'Chair Stain Removal', 'Mattress Sanitization', 'Curtain Refresh']
+        },
+        'HVAC': {
+            'AC Repair': ['Compressor Fix', 'Refrigerant Refill', 'Fan Motor Replacement', 'Capacitor Change'],
+            'Heater Repair': ['Pilot Light Fix', 'Heat Exchanger Repair', 'Blower Motor Replacement', 'Ignition Sensor Fix'],
+            'Duct Cleaning': ['Air Duct Vacuuming', 'Vent Sanitization', 'Filter Replacement', 'Mold Remediation'],
+            'Thermostat Installation': ['Smart Thermostat Setup', 'Digital Thermostat Wiring', 'Calibration', 'Battery Replacement'],
+            'System Maintenance': ['Annual Tune-up', 'Coil Cleaning', 'Safety Inspection', 'Performance Testing']
+        }
+    };
+    const categories = Object.keys(fullCategoryData);
     const priceTypes = ['Fixed', 'Per Hour', 'Per Day', 'Per Project'];
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const handleServiceChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setCurrentService(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
+        setCurrentService(prev => {
+            const newState = {
+                ...prev,
+                [name]: type === 'checkbox' ? checked : value
+            };
+            // Level 1: Reset Sub-category and Service if Category changes
+            if (name === 'category') {
+                newState.subCategory = '';
+                newState.serviceName = '';
+            }
+            // Level 2: Reset Service if Sub-category changes
+            if (name === 'subCategory') {
+                newState.serviceName = '';
+            }
+            return newState;
+        });
     };
-
     const handleServiceFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -65,12 +118,10 @@ export default function ServicesInfoForm({
             setIsTimeSlotsModalOpen(true);
         }
     };
-
     const handleDayClick = (day) => {
         setCurrentDayForTimeSlots(day);
         setIsTimeSlotsModalOpen(true);
     };
-
     const handleSaveTimeSlots = (day, slots) => {
         setCurrentService(prev => {
             const existingDays = prev.days.filter(d => d.day !== day);
@@ -87,19 +138,16 @@ export default function ServicesInfoForm({
         });
         setIsTimeSlotsModalOpen(false);
     };
-
     const handleAddOrUpdateService = () => {
         if (!currentService.category || !currentService.serviceName || !currentService.price) {
             alert('Please fill in all required fields (Category, Service Name, Price)');
             return;
         }
-
         const serviceData = {
             ...currentService,
             id: editingId || Date.now(),
             commission: '10%'
         };
-
         if (editingId) {
             onEditService(editingId, serviceData);
             setEditingId(null);
@@ -119,13 +167,11 @@ export default function ServicesInfoForm({
             days: []
         });
     };
-
     const handleEditClick = (service) => {
         setCurrentService(service);
         setEditingId(service.id);
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
-
     return (
         <motion.div
             key="services"
@@ -138,9 +184,7 @@ export default function ServicesInfoForm({
                 <h3 className="text-xl font-bold text-homefix-text mb-6 text-left">
                     {editingId ? 'Edit Service' : 'Add New Service'}
                 </h3>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Category */}
                     <div className="space-y-2">
                         <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
                             Category <span className="text-red-500">*</span>
@@ -161,27 +205,37 @@ export default function ServicesInfoForm({
                         <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
                             Sub-category <span className="text-red-500">*</span>
                         </label>
-                        <input
-                            type="text"
+                        <select
                             name="subCategory"
                             value={currentService.subCategory}
                             onChange={handleServiceChange}
-                            className="w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all text-left"
-                            placeholder="e.g., Residential"
-                        />
+                            disabled={!currentService.category}
+                            className={`w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all text-left ${!currentService.category ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                            <option value="">Select sub-category</option>
+                            {currentService.category && Object.keys(fullCategoryData[currentService.category] || {}).map(sub => (
+                                <option key={sub} value={sub}>{sub}</option>
+                            ))}
+                        </select>
                     </div>
                     <div className="space-y-2">
                         <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
                             Service <span className="text-red-500">*</span>
                         </label>
-                        <input
-                            type="text"
+                        <select
                             name="serviceName"
                             value={currentService.serviceName}
                             onChange={handleServiceChange}
-                            className="w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all text-left"
-                            placeholder="e.g., Pipe Installation"
-                        />
+                            disabled={!currentService.subCategory}
+                            className={`w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all text-left ${!currentService.subCategory ? 'opacity-50 cursor-not-allowed' : ''}`}
+                        >
+                            <option value="">Select service</option>
+                            {currentService.category && currentService.subCategory &&
+                                fullCategoryData[currentService.category]?.[currentService.subCategory]?.map(service => (
+                                    <option key={service} value={service}>{service}</option>
+                                ))
+                            }
+                        </select>
                     </div>
                     <div className="space-y-2">
                         <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
@@ -194,7 +248,6 @@ export default function ServicesInfoForm({
                             className="w-32 bg-[#0F172A] text-white px-5 py-2 outline-none rounded-2xl border-none font-black text-center cursor-not-allowed"
                         />
                     </div>
-
                     <div className="space-y-2">
                         <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
                             Price Type <span className="text-red-500">*</span>
@@ -248,7 +301,6 @@ export default function ServicesInfoForm({
                             </label>
                         </div>
                     </div>
-
                     <div className="md:col-span-1 space-y-2">
                         <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
                             Description <span className="text-red-500">*</span>
@@ -263,7 +315,6 @@ export default function ServicesInfoForm({
                         />
                     </div>
                 </div>
-
                 <div className="mt-6 flex items-center gap-3">
                     <div className="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full border border-gray-300">
                         <input
@@ -281,7 +332,6 @@ export default function ServicesInfoForm({
                         Always Available
                     </label>
                 </div>
-
                 {!currentService.alwaysAvailable && (
                     <div className="mt-6">
                         <label className="block text-homefix-text font-semibold mb-3 text-left text-sm">
@@ -291,12 +341,11 @@ export default function ServicesInfoForm({
                             {daysOfWeek.map(day => {
                                 const dayData = currentService.days.find(d => d.day === day);
                                 const isSelected = !!dayData;
-
                                 return (
                                     <button
                                         key={day}
                                         type="button"
-                                        onClick={() => handleDayClick(day)} // Open modal on click
+                                        onClick={() => handleDayClick(day)}
                                         className={`w-24 h-24 flex flex-col items-center justify-center rounded-lg border transition-all ${isSelected
                                             ? 'bg-homefix-primary text-white border-homefix-primary shadow-md'
                                             : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
@@ -314,7 +363,6 @@ export default function ServicesInfoForm({
                         </div>
                     </div>
                 )}
-
                 <div className="mt-8 flex justify-end">
                     <button
                         type="button"
@@ -325,8 +373,6 @@ export default function ServicesInfoForm({
                     </button>
                 </div>
             </div>
-
-            {/* Service Cards List */}
             {services.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                     {services.map(service => (
@@ -355,7 +401,6 @@ export default function ServicesInfoForm({
                     Sign Up
                 </button>
             </div>
-
             <TimeSlotsModal
                 isOpen={isTimeSlotsModalOpen}
                 day={currentDayForTimeSlots}

@@ -1,170 +1,40 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useProviderRegister } from '../features/provider-register/hooks/useProviderRegister';
+import { BasicDetailsForm } from '../features/provider-register/components/BasicDetailsForm';
+import { ServicesManager } from '../features/provider-register/components/ServicesManager';
 import TabNavigation from '../components/provider-register/TabNavigation';
-import BasicInfoForm from '../components/provider-register/BasicInfoForm';
-import ServicesInfoForm from '../components/provider-register/ServicesInfoForm';
-import Logo from '../components/Logo';
 import FinalConfirmationModal from '../components/provider-register/FinalConfirmationModal';
-import { API_ENDPOINTS, apiCall } from '../config/api';
+import Logo from '../components/Logo';
 
 export default function ProviderRegister() {
-    const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState('basic');
-    const [services, setServices] = useState([]);
-    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
-
-    const [formData, setFormData] = useState({
-        // Basic Information (matches backend users model: first_name, last_name, email, password, address)
-        name: '',
-        profession: '',
-        email: '',
-        phone: '',
-        password: '',
-        confirmPassword: '',
-        address: '',
-        city: '',
-        state: '',
-        zipCode: '',
-        bio: '',
-
-        hourlyRate: '',
-        experience: '',
-        serviceAreas: [],
-
-        // Documents
-        idDocument: null,
-        certifications: null
-    });
-
-    const [selectedDays, setSelectedDays] = useState([]);
-    const [registerError, setRegisterError] = useState('');
-    const [isSubmitting, setIsSubmitting] = useState(false);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-    };
-
-    const handleServiceAreaChange = (newServiceAreas) => {
-        setFormData(prev => ({
-            ...prev,
-            serviceAreas: newServiceAreas
-        }));
-    };
-
-    const handleFileChange = (e, fieldName) => {
-        const file = e.target.files[0];
-        if (file) {
-            setFormData(prev => ({
-                ...prev,
-                [fieldName]: file
-            }));
-        }
-    };
-
-    const handleNext = () => {
-        // Validate passwords match
-        if (formData.password !== formData.confirmPassword) {
-            alert('Passwords do not match!');
-            return;
-        }
-
-        if (formData.password.length < 6) {
-            alert('Password must be at least 6 characters long!');
-            return;
-        }
-
-        setActiveTab('services');
-    };
-
-    const handleBack = () => {
-        if (activeTab === 'services') {
-            setActiveTab('basic');
-        } else {
-            navigate(-1);
-        }
-    };
-
-    const toggleDay = (day) => {
-        setSelectedDays(prev =>
-            prev.includes(day)
-                ? prev.filter(d => d !== day)
-                : [...prev, day]
-        );
-    };
-
-    const handleAddService = (service) => {
-        setServices(prev => [...prev, service]);
-    };
-
-    const handleEditService = (serviceId, updatedService) => {
-        setServices(prev => prev.map(s => s.id === serviceId ? updatedService : s));
-    };
-
-    const handleDeleteService = (serviceId) => {
-        if (confirm('Are you sure you want to delete this service?')) {
-            setServices(prev => prev.filter(s => s.id !== serviceId));
-        }
-    };
-
-    const handleSkipForLater = () => {
-        console.log('Skipping for later...');
-        navigate('/provider-dashboard');
-    };
-
-    const handleSubmit = () => {
-        if (services.length === 0) {
-            alert('Please add at least one service!');
-            return;
-        }
-        setIsConfirmOpen(true);
-    };
-
-    const handleFinalConfirm = async () => {
-        setRegisterError('');
-        const cities = formData.serviceAreas?.length ? formData.serviceAreas : (formData.city ? [formData.city] : []);
-        if (!cities.length) {
-            setRegisterError('Please select at least one service area or city.');
-            return;
-        }
-        setIsSubmitting(true);
-        try {
-            // Map formData to backend entities (users model: first_name, last_name, email, password, address)
-            // Backend expects: firstname, lastname, email, password, cityOrCities (array), account_type, address
-            const nameParts = (formData.name || '').trim().split(/\s+/);
-            const firstname = nameParts[0] || '';
-            const lastname = nameParts.slice(1).join(' ') || nameParts[0] || '';
-
-            const registerData = {
-                firstname,
-                lastname,
-                email: formData.email,
-                password: formData.password,
-                cityOrCities: cities,
-                account_type: 'provider',
-                address: formData.address || null,
-            };
-
-            await apiCall(API_ENDPOINTS.AUTH.SIGNUP, {
-                method: 'POST',
-                body: JSON.stringify(registerData),
-            });
-
-            navigate('/provider-dashboard');
-        } catch (err) {
-            setRegisterError(err.message || 'Registration failed. Please try again.');
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
+    const {
+        formData,
+        services,
+        activeTab,
+        isConfirmOpen,
+        registerError,
+        isSubmitting,
+        setActiveTab,
+        setIsConfirmOpen,
+        setRegisterError,
+        handleChange,
+        handleServiceAreaChange,
+        handleNext,
+        handleBack,
+        handleAddService,
+        handleEditService,
+        handleDeleteService,
+        handleSkipForLater,
+        handleSubmit,
+        syncWithIntegromat
+    } = useProviderRegister();
 
     return (
         <div className="min-h-screen bg-homefix-secondary flex items-center justify-center p-6 py-12 font-['Poppins']">
             <div className="w-full max-w-5xl bg-homefix-bg shadow-2xl overflow-hidden flex flex-col rounded-[2rem]">
+
+                {/* Header Section */}
                 <div className="bg-gradient-to-br from-homefix-bg to-gray-100 p-12 flex flex-col items-center justify-center min-h-[200px] relative">
                     <button
                         onClick={handleBack}
@@ -185,47 +55,50 @@ export default function ProviderRegister() {
                 {/* Tab Navigation */}
                 <TabNavigation activeTab={activeTab} setActiveTab={setActiveTab} />
 
-                {/* Form Content */}
+                {/* Main Content Area */}
                 <div className="bg-white p-8">
-                    {activeTab === 'basic' ? (
-                        <BasicInfoForm
-                            formData={formData}
-                            handleChange={handleChange}
-                            handleServiceAreaChange={handleServiceAreaChange}
-                            handleNext={handleNext}
-                        />
-                    ) : (
-                        <ServicesInfoForm
-                            formData={formData}
-                            handleChange={handleChange}
-                            handleFileChange={handleFileChange}
-                            services={services}
-                            onAddService={handleAddService}
-                            onEditService={handleEditService}
-                            onDeleteService={handleDeleteService}
-                            selectedDays={selectedDays}
-                            toggleDay={toggleDay}
-                            onSkipForLater={handleSkipForLater}
-                            onSubmit={handleSubmit}
-                        />
-                    )}
+                    <motion.div
+                        key={activeTab}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 20 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        {activeTab === 'basic' ? (
+                            <BasicDetailsForm
+                                data={formData}
+                                onChange={handleChange}
+                                onServiceAreaChange={handleServiceAreaChange}
+                                onNext={handleNext}
+                            />
+                        ) : (
+                            <ServicesManager
+                                services={services}
+                                onAddService={handleAddService}
+                                onEditService={handleEditService}
+                                onDeleteService={handleDeleteService}
+                                onSkipForLater={handleSkipForLater}
+                                onSubmit={handleSubmit}
+                            />
+                        )}
+                    </motion.div>
 
-                    {/* Footer - Shared */}
                     <div className="mt-6 pt-6 border-t border-gray-200 text-center space-y-2">
                         <p className="text-gray-600">
-                            Already Have Account? <button type="button" onClick={() => navigate('/login')} className="text-homefix-primary font-semibold hover:underline">Sign In</button>
+                            Already Have Account? <a href="/login" className="text-homefix-primary font-bold hover:underline">Sign In</a>
                         </p>
                         <p className="text-gray-600 mt-2">
-                            Want to Sign Up as Customer? <button type="button" onClick={() => navigate('/customer-register')} className="text-homefix-primary font-semibold hover:underline">Click Here</button>
+                            Want to Sign Up as Customer? <a href="/customer-register" className="text-homefix-primary font-bold hover:underline">Click Here</a>
                         </p>
                     </div>
                 </div>
             </div>
 
+            {/* Modals outside the layout structure */}
             <FinalConfirmationModal
                 isOpen={isConfirmOpen}
                 formData={formData}
-                onConfirm={handleFinalConfirm}
+                onConfirm={syncWithIntegromat}
                 onCancel={() => { setIsConfirmOpen(false); setRegisterError(''); }}
                 error={registerError}
                 isSubmitting={isSubmitting}

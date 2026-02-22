@@ -37,7 +37,6 @@ export default function TimeSlotsModal({ isOpen, day, existingSlots, onClose, on
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4" dir="ltr">
-                    {/* Backdrop */}
                     <motion.div 
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -45,15 +44,12 @@ export default function TimeSlotsModal({ isOpen, day, existingSlots, onClose, on
                         onClick={onClose}
                         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
                     />
-
-                    {/* Modal Content */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.9, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.9, y: 20 }}
                         className="relative bg-white w-full max-w-md rounded-2xl shadow-premium overflow-hidden"
                     >
-                        {/* Header */}
                         <div className="bg-white px-6 py-4 border-b border-slate-100 flex justify-between items-center">
                             <div className="flex items-center gap-2">
                                 <div className="p-2 bg-homefix-primary/10 rounded-lg">
@@ -75,8 +71,6 @@ export default function TimeSlotsModal({ isOpen, day, existingSlots, onClose, on
                                 <X className="w-5 h-5" />
                             </button>
                         </div>
-
-                        {/* Body */}
                         <div className="p-6 max-h-[60vh] overflow-y-auto custom-scrollbar">
                             <div className="space-y-4">
                                 {timeSlots.map((slot, index) => (
@@ -124,8 +118,6 @@ export default function TimeSlotsModal({ isOpen, day, existingSlots, onClose, on
                                     </motion.div>
                                 ))}
                             </div>
-
-                            {/* Add Slot Button */}
                             <button
                                 type="button"
                                 onClick={handleAddSlot}
@@ -135,8 +127,6 @@ export default function TimeSlotsModal({ isOpen, day, existingSlots, onClose, on
                                 Add Another Slot
                             </button>
                         </div>
-
-                        {/* Footer */}
                         <div className="p-6 bg-slate-50 border-t border-slate-100 flex gap-3">
                             <button
                                 onClick={onClose}

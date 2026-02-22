@@ -57,19 +57,14 @@ NGROK_URL=https://nonexponential-repulsively-kip.ngrok-free.dev
 
 ```javascript
 import { API_ENDPOINTS, apiCall } from "../config/api";
-
-// Example: Login
 const handleLogin = async (email, password) => {
   try {
     const response = await apiCall(API_ENDPOINTS.AUTH.LOGIN, {
       method: "POST",
       body: JSON.stringify({ email, password }),
     });
-
-    // Handle success
     console.log("Login successful:", response);
   } catch (error) {
-    // Handle error
     console.error("Login failed:", error.message);
   }
 };

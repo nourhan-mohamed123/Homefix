@@ -1,7 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Check, ShieldCheck, Edit3, ArrowRight, X } from 'lucide-react';
-
 export default function FinalConfirmationModal({ isOpen, formData, onConfirm, onCancel, error, isSubmitting }) {
     const dataPoints = [
         { label: 'Full Name', value: formData.name, icon: <Check className="w-3 h-3 text-emerald-500" /> },
@@ -9,12 +8,10 @@ export default function FinalConfirmationModal({ isOpen, formData, onConfirm, on
         { label: 'Hourly Rate', value: `$${formData.hourlyRate || '0'} / hr`, icon: <Check className="w-3 h-3 text-emerald-500" /> },
         { label: 'Email Address', value: formData.email, icon: <Check className="w-3 h-3 text-emerald-500" /> },
     ];
-
     return (
         <AnimatePresence>
             {isOpen && (
                 <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" dir="ltr">
-                    {/* Backdrop */}
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -22,8 +19,6 @@ export default function FinalConfirmationModal({ isOpen, formData, onConfirm, on
                         onClick={onCancel}
                         className="absolute inset-0 bg-slate-900/60 backdrop-blur-md"
                     />
-
-                    {/* Modal Content */}
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95, y: 20 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -36,9 +31,7 @@ export default function FinalConfirmationModal({ isOpen, formData, onConfirm, on
                         >
                             <X className="w-5 h-5" />
                         </button>
-
                         <div className="p-10">
-                            {/* Header */}
                             <div className="text-center mb-8">
                                 <div className="inline-flex items-center justify-center w-20 h-20 bg-emerald-50 rounded-full mb-4">
                                     <ShieldCheck className="w-10 h-10 text-emerald-500" />
@@ -47,13 +40,11 @@ export default function FinalConfirmationModal({ isOpen, formData, onConfirm, on
                                 <p className="text-slate-400 font-medium mt-1">Double-check before we finalize</p>
                             </div>
 
-                            {error && (
+                        {error && (
                                 <div className="mb-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
                                     {error}
                                 </div>
                             )}
-
-                            {/* Summary Grid */}
                             <div className="grid grid-cols-1 gap-3 mb-10">
                                 {dataPoints.map((item, index) => (
                                     <div key={index} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100/50">
@@ -67,8 +58,6 @@ export default function FinalConfirmationModal({ isOpen, formData, onConfirm, on
                                     </div>
                                 ))}
                             </div>
-
-                            {/* Action Buttons */}
                             <div className="space-y-3">
                                 <button
                                     onClick={onConfirm}
@@ -87,8 +76,6 @@ export default function FinalConfirmationModal({ isOpen, formData, onConfirm, on
                                     Wait, let me edit
                                 </button>
                             </div>
-
-                            {/* Trust Footer */}
                             <div className="mt-8 pt-6 border-t border-slate-50 text-center text-center">
                                 <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest leading-relaxed">
                                     By confirming, you agree to our <br />

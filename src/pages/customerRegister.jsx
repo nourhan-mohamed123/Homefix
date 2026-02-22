@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { API_ENDPOINTS, apiCall } from '../config/api';
-
 const CustomerRegister = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -16,30 +15,60 @@ const CustomerRegister = () => {
     address: ''
   });
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
-
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
+  const handlePhoneChange = (e) => {
+    const { value } = e.target;
+    if (value && !/^\d+$/.test(value)) return;
+    handleChange(e);
+    if (value.length > 0 && value.length !== 11) {
+      setFieldErrors(prev => ({ ...prev, phone: 'Phone number must be exactly 11 digits' }));
+    } else {
+      setFieldErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.phone;
+        return newErrors;
+      });
+    }
+  };
+  const handleConfirmPasswordChange = (e) => {
+    const { value } = e.target;
+    handleChange(e);
 
+    if (value && value !== formData.password) {
+      setFieldErrors(prev => ({ ...prev, confirmPassword: 'Passwords do not match' }));
+    } else {
+      setFieldErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.confirmPassword;
+        return newErrors;
+      });
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
-    // Validation
+    const errors = {};
+    if (formData.phone.length !== 11) {
+      errors.phone = 'Phone number must be exactly 11 digits';
+    }
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match');
-      return;
+      errors.confirmPassword = 'Passwords do not match';
     }
 
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      return;
+    }
     setLoading(true);
-
     try {
-      // Map formData to backend entities (users model: first_name, last_name, email, password, address, account_type)
-      // Backend expects: firstname, lastname, email, password, cityOrCities (array), account_type, address
       const registerData = {
         firstname: formData.firstName,
         lastname: formData.lastName,
@@ -49,13 +78,10 @@ const CustomerRegister = () => {
         account_type: 'customer',
         address: formData.address || null,
       };
-
       await apiCall(API_ENDPOINTS.AUTH.SIGNUP, {
         method: 'POST',
         body: JSON.stringify(registerData),
       });
-
-      // On success, redirect to login
       navigate('/login');
     } catch (err) {
       setError(err.message || 'Registration failed. Please try again.');
@@ -63,7 +89,6 @@ const CustomerRegister = () => {
       setLoading(false);
     }
   };
-
   return (
     <div className="min-h-screen bg-homefix-secondary flex items-center justify-center p-6 py-12 font-['Poppins']">
       <div className="w-full max-w-5xl bg-homefix-bg shadow-2xl overflow-hidden flex flex-col rounded-[2rem]">
@@ -116,7 +141,6 @@ const CustomerRegister = () => {
                 />
               </div>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
                 <label className="text-homefix-text font-bold text-sm">Password <span className="text-homefix-alert">*</span></label>
@@ -131,21 +155,20 @@ const CustomerRegister = () => {
                   minLength="6"
                 />
               </div>
-
               <div className="space-y-2">
                 <label className="text-homefix-text font-bold text-sm">Confirm Password <span className="text-homefix-alert">*</span></label>
                 <input
                   type="password"
                   name="confirmPassword"
                   value={formData.confirmPassword}
-                  onChange={handleChange}
+                  onChange={handleConfirmPasswordChange}
                   placeholder="Confirm Password"
-                  className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all"
+                  className={`w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border ${fieldErrors.confirmPassword ? 'border-red-500' : 'border-gray-200'} focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all`}
                   required
                 />
+                {fieldErrors.confirmPassword && <p className="text-red-500 text-xs mt-1 ml-1">{fieldErrors.confirmPassword}</p>}
               </div>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
                 <label className="text-homefix-text font-bold text-sm">Email <span className="text-homefix-alert">*</span></label>
@@ -165,14 +188,15 @@ const CustomerRegister = () => {
                   type="tel"
                   name="phone"
                   value={formData.phone}
-                  onChange={handleChange}
+                  onChange={handlePhoneChange}
                   placeholder="Phone Number"
-                  className="w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all"
+                  className={`w-full bg-white px-5 py-4 outline-none rounded-xl shadow-sm border ${fieldErrors.phone ? 'border-red-500' : 'border-gray-200'} focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all`}
                   required
+                  maxLength={11}
                 />
+                {fieldErrors.phone && <p className="text-red-500 text-xs mt-1 ml-1">{fieldErrors.phone}</p>}
               </div>
             </div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
                 <label className="text-homefix-text font-bold text-sm">City <span className="text-homefix-alert">*</span></label>
@@ -199,16 +223,6 @@ const CustomerRegister = () => {
                 />
               </div>
             </div>
-            <div className="flex flex-col items-center justify-center gap-10 pt-4">
-              <button
-                type="submit"
-                disabled={loading}
-                className="bg-homefix-primary text-white px-12 py-3 text-lg font-black tracking-widest rounded-xl hover:bg-homefix-accent transition-all duration-300 shadow-lg shadow-homefix-primary/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? 'Creating Account...' : 'Sign Up'}
-              </button>
-            </div>
-
             <div className="w-full text-center space-y-4 pt-4 border-t border-gray-200 mt-4">
               <p className="text-homefix-text font-medium text-sm">
                 Already Have Account?
@@ -226,5 +240,4 @@ const CustomerRegister = () => {
     </div>
   );
 };
-
 export default CustomerRegister;

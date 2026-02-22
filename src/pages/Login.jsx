@@ -39,8 +39,6 @@ const Login = () => {
       const user = { id: response.id, name: response.name, email: response.email, role: response.role };
       const storage = formData.rememberMe ? localStorage : sessionStorage;
       storage.setItem('user', JSON.stringify(user));
-
-      // Navigate based on user role
       if (response.role === 'provider') {
         navigate('/provider-dashboard');
       } else if (response.role === 'admin') {

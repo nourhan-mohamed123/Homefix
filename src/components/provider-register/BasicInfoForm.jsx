@@ -4,14 +4,55 @@ import { ChevronDown, X } from 'lucide-react';
 
 export default function BasicInfoForm({ formData, handleChange, handleServiceAreaChange, handleNext }) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [errors, setErrors] = useState({});
 
+    const handlePhoneChange = (e) => {
+        const { value } = e.target;
+        if (value && !/^\d+$/.test(value)) return;
+        handleChange(e);
+        if (value.length > 0 && value.length !== 11) {
+            setErrors(prev => ({ ...prev, phone: 'Phone number must be exactly 11 digits' }));
+        } else {
+            setErrors(prev => {
+                const newErrors = { ...prev };
+                delete newErrors.phone;
+                return newErrors;
+            });
+        }
+    };
+    const handleConfirmPasswordChange = (e) => {
+        const { value } = e.target;
+        handleChange(e);
+        if (value && value !== formData.password) {
+            setErrors(prev => ({ ...prev, confirmPassword: 'Passwords do not match' }));
+        } else {
+            setErrors(prev => {
+                const newErrors = { ...prev };
+                delete newErrors.confirmPassword;
+                return newErrors;
+            });
+        }
+    };
+    const validateAndNext = () => {
+        const newErrors = {};
+        if (formData.phone && formData.phone.length !== 11) {
+            newErrors.phone = 'Phone number must be exactly 11 digits';
+        }
+        if (formData.confirmPassword !== formData.password) {
+            newErrors.confirmPassword = 'Passwords do not match';
+        }
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+        handleNext();
+    };
     const cities = [
         "Cairo", "Giza", "Alexandria", "Shubra El Kheima", "Port Said", "Suez", "Luxor", "Mansoura",
         "El-Mahalla El-Kubra", "Tanta", "Asyut", "Ismailia", "Fayyum", "Zagazig", "Aswan", "Damietta",
-        "Damanhur", "Minya", "Beni Suef", "Qena", "Sohag", "Hurghada", "6th of October", "Shibin El Kom",
-        "Banha", "Kafr el-Sheikh", "Arish", "Mallawi", "10th of Ramadan", "Bilbais", "Marsa Matruh"
+        "Damanhur", "Minya", "Beni Suef", "Qena", "Sohag", "Hurghada", "6th of October", "Shibin El Kom"
     ];
-
     const toggleCity = (city) => {
         const currentAreas = formData.serviceAreas || [];
         if (currentAreas.includes(city)) {
@@ -20,17 +61,14 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
             handleServiceAreaChange([...currentAreas, city]);
         }
     };
-
     const removeCity = (city) => {
         const currentAreas = formData.serviceAreas || [];
         handleServiceAreaChange(currentAreas.filter(c => c !== city));
     };
-
     const professions = [
         'Plumber', 'Electrician', 'Carpenter', 'Painter',
         'Cleaner', 'HVAC Technician', 'Landscaper', 'Roofer'
     ];
-
     return (
         <motion.div
             key="basic"
@@ -40,7 +78,6 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
             transition={{ duration: 0.3 }}
         >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Name */}
                 <div className="space-y-2">
                     <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
                         Name <span className="text-red-500">*</span>
@@ -55,8 +92,6 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
                         required
                     />
                 </div>
-
-                {/* Email */}
                 <div className="space-y-2">
                     <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
                         Email <span className="text-red-500">*</span>
@@ -71,8 +106,6 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
                         required
                     />
                 </div>
-
-                {/* Phone */}
                 <div className="space-y-2">
                     <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
                         Phone <span className="text-red-500">*</span>
@@ -81,14 +114,14 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
                         type="tel"
                         name="phone"
                         value={formData.phone}
-                        onChange={handleChange}
-                        className="w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all text-left"
+                        onChange={handlePhoneChange}
+                        className={`w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border ${errors.phone ? 'border-red-500' : 'border-gray-200'} focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all text-left`}
                         placeholder="Enter your phone"
                         required
+                        maxLength={11}
                     />
+                    {errors.phone && <p className="text-red-500 text-xs mt-1 text-left">{errors.phone}</p>}
                 </div>
-
-                {/* Address */}
                 <div className="space-y-2">
                     <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
                         Address <span className="text-red-500">*</span>
@@ -103,8 +136,6 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
                         required
                     />
                 </div>
-
-                {/* Password */}
                 <div className="space-y-2">
                     <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
                         Password <span className="text-red-500">*</span>
@@ -120,8 +151,6 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
                         minLength={6}
                     />
                 </div>
-
-                {/* Confirm Password */}
                 <div className="space-y-2">
                     <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
                         Confirm Password <span className="text-red-500">*</span>
@@ -130,19 +159,14 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
                         type="password"
                         name="confirmPassword"
                         value={formData.confirmPassword}
-                        onChange={handleChange}
-                        className="w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all text-left"
+                        onChange={handleConfirmPasswordChange}
+                        className={`w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border ${errors.confirmPassword ? 'border-red-500' : 'border-gray-200'} focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all text-left`}
                         placeholder="Confirm your password"
                         required
                         minLength={6}
                     />
+                    {errors.confirmPassword && <p className="text-red-500 text-xs mt-1 text-left">{errors.confirmPassword}</p>}
                 </div>
-
-
-
-
-
-                {/* Service Areas - Multi Select */}
                 <div className="space-y-2 relative md:col-span-2">
                     <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
                         Service Areas <span className="text-red-500">*</span>
@@ -180,7 +204,6 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
                                 />
                             </div>
                         </div>
-
                         {isDropdownOpen && (
                             <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 max-h-[300px] overflow-y-auto z-50 p-2">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
@@ -202,21 +225,15 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
                             </div>
                         )}
                     </div>
-                    {/* Backdrop to close dropdown */}
                     {isDropdownOpen && (
                         <div className="fixed inset-0 z-40" onClick={() => setIsDropdownOpen(false)}></div>
                     )}
                 </div>
-
-                {/* Bio */}
-
             </div>
-
-            {/* Next Button */}
             <div className="flex justify-center pt-8">
                 <button
                     type="button"
-                    onClick={handleNext}
+                    onClick={validateAndNext}
                     className="bg-homefix-primary text-white px-20 py-4 text-lg font-black tracking-widest rounded-xl hover:bg-homefix-accent transition-all duration-300 shadow-lg shadow-homefix-primary/20 active:scale-95"
                 >
                     Next

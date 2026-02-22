@@ -1,6 +1,6 @@
 // API Configuration
 // Using Cloudflare tunnel for external access
-export const API_BASE_URL = 'https://ranked-resort-required-provincial.trycloudflare.com';
+export const API_BASE_URL = 'https://achievement-dash-nov-pink.trycloudflare.com';
 
 // API endpoints
 // API endpoints
