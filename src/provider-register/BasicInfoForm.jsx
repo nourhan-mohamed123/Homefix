@@ -80,7 +80,7 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-2">
                     <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                        Name <span className="text-red-500">*</span>
+                        Name :<span className="text-red-500">*</span>
                     </label>
                     <input
                         type="text"
@@ -94,7 +94,7 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
                 </div>
                 <div className="space-y-2">
                     <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                        Email <span className="text-red-500">*</span>
+                        Email :<span className="text-red-500">*</span>
                     </label>
                     <input
                         type="email"
@@ -108,7 +108,7 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
                 </div>
                 <div className="space-y-2">
                     <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                        Phone <span className="text-red-500">*</span>
+                        Phone :<span className="text-red-500">*</span>
                     </label>
                     <input
                         type="tel"
@@ -124,7 +124,7 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
                 </div>
                 <div className="space-y-2">
                     <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                        Address <span className="text-red-500">*</span>
+                        Address :<span className="text-red-500">*</span>
                     </label>
                     <input
                         type="text"
@@ -138,7 +138,7 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
                 </div>
                 <div className="space-y-2">
                     <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                        Password <span className="text-red-500">*</span>
+                        Password :<span className="text-red-500">*</span>
                     </label>
                     <input
                         type="password"
@@ -153,7 +153,7 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
                 </div>
                 <div className="space-y-2">
                     <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                        Confirm Password <span className="text-red-500">*</span>
+                        Confirm Password :<span className="text-red-500">*</span>
                     </label>
                     <input
                         type="password"
@@ -169,7 +169,7 @@ export default function BasicInfoForm({ formData, handleChange, handleServiceAre
                 </div>
                 <div className="space-y-2 relative md:col-span-2">
                     <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                        Service Areas <span className="text-red-500">*</span>
+                        Service Areas :<span className="text-red-500">*</span>
                     </label>
 
                     <div className="relative">

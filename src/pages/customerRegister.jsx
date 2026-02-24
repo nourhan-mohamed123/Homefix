@@ -151,7 +151,7 @@ const CustomerRegister = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-homefix-text font-bold text-sm">Password <span className="text-homefix-alert text-red-500">*</span></label>
+                <label className="text-homefix-text font-bold text-sm">Password :<span className="text-homefix-alert text-red-500">*</span></label>
                 <input
                   type="password"
                   name="password"
@@ -164,7 +164,7 @@ const CustomerRegister = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-homefix-text font-bold text-sm">Confirm Password <span className="text-homefix-alert ml-1 text-red-500">*</span></label>
+                <label className="text-homefix-text font-bold text-sm">Confirm Password :<span className="text-homefix-alert ml-1 text-red-500">*</span></label>
                 <input
                   type="password"
                   name="confirmPassword"
@@ -179,7 +179,7 @@ const CustomerRegister = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-homefix-text font-bold text-sm">Email <span className="text-homefix-alert ml-1 text-red-500">*</span></label>
+                <label className="text-homefix-text font-bold text-sm">Email :<span className="text-homefix-alert ml-1 text-red-500">*</span></label>
                 <input
                   type="email"
                   name="email"
@@ -191,7 +191,7 @@ const CustomerRegister = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-homefix-text font-bold text-sm">Phone Number <span className="text-homefix-alert ml-1 text-red-500">*</span></label>
+                <label className="text-homefix-text font-bold text-sm">Phone Number :<span className="text-homefix-alert ml-1 text-red-500">*</span></label>
                 <input
                   type="tel"
                   name="phone"
@@ -207,7 +207,7 @@ const CustomerRegister = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-homefix-text font-bold text-sm">City <span className="text-homefix-alert ml-1 text-red-500">*</span></label>
+                <label className="text-homefix-text font-bold text-sm">City :<span className="text-homefix-alert ml-1 text-red-500">*</span></label>
                 <input
                   type="text"
                   name="city"
@@ -219,7 +219,7 @@ const CustomerRegister = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-homefix-text font-bold text-sm">Address</label>
+                <label className="text-homefix-text font-bold text-sm">Address :</label>
                 <input
                   type="text"
                   name="address"

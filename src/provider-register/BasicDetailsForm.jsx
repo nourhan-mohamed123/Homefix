@@ -59,7 +59,7 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
         >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
-                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">First Name <span className="text-red-500">*</span></label>
+                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">First Name :<span className="text-red-500">*</span></label>
                     <input
                         name="firstName"
                         value={data.firstName}
@@ -69,7 +69,7 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                     />
                 </div>
                 <div className="flex flex-col gap-2">
-                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Last Name <span className="text-red-500">*</span></label>
+                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Last Name :<span className="text-red-500">*</span></label>
                     <input
                         name="lastName"
                         value={data.lastName}
@@ -79,7 +79,7 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                     />
                 </div>
                 <div className="flex flex-col gap-2">
-                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Email <span className="text-red-500">*</span></label>
+                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Email :<span className="text-red-500">*</span></label>
                     <input
                         name="email"
                         type="email"
@@ -90,7 +90,7 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                     />
                 </div>
                 <div className="flex flex-col gap-2">
-                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Phone <span className="text-red-500">*</span></label>
+                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Phone :<span className="text-red-500">*</span></label>
                     <input
                         name="phone"
                         type="tel"
@@ -103,7 +103,7 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                     {errors.phone && <span className="text-red-500 text-xs">{errors.phone}</span>}
                 </div>
                 <div className="flex flex-col gap-2">
-                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Address <span className="text-red-500">*</span></label>
+                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Address :<span className="text-red-500">*</span></label>
                     <input
                         name="address"
                         value={data.address}
@@ -113,7 +113,7 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                     />
                 </div>
                 <div className="flex flex-col gap-2">
-                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">City <span className="text-red-500">*</span></label>
+                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">City :<span className="text-red-500">*</span></label>
                     <input
                         name="city"
                         value={data.city}
@@ -123,7 +123,7 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                     />
                 </div>
                 <div className="flex flex-col gap-2">
-                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Password <span className="text-red-500">*</span></label>
+                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Password :<span className="text-red-500">*</span></label>
                     <input
                         name="password"
                         type="password"
@@ -134,7 +134,7 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                     />
                 </div>
                 <div className="flex flex-col gap-2">
-                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Confirm Password <span className="text-red-500">*</span></label>
+                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Confirm Password :<span className="text-red-500">*</span></label>
                     <input
                         name="confirmPassword"
                         type="password"
@@ -146,10 +146,10 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                     {errors.confirmPassword && <span className="text-red-500 text-xs">{errors.confirmPassword}</span>}
                 </div>
                 <div className="col-span-1 md:col-span-2 flex flex-col gap-2">
-                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Discretion <span className="text-red-500">*</span></label>
+                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide"> description :<span className="text-red-500">*</span></label>
                     <textarea
-                        name="discretion"
-                        value={data.discretion}
+                        name="description"
+                        value={data.description}
                         onChange={onChange}
                         className="p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-homefix-primary focus:border-transparent outline-none transition-all min-h-[120px] resize-none"
                         placeholder="Tell us about yourself or your service discretion..."
@@ -157,7 +157,7 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                     />
                 </div>
                 <div className="col-span-1 md:col-span-2 flex flex-col gap-2 bg-white rounded-xl relative z-10">
-                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Service Areas <span className="text-red-500">*</span></label>
+                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Service Areas :<span className="text-red-500">*</span></label>
                     <div className="relative">
                         <div
                             className="w-full bg-gray-50 p-4 min-h-[58px] rounded-xl border border-gray-200 cursor-pointer flex flex-wrap gap-2 items-center focus-within:ring-2 focus-within:ring-homefix-primary"

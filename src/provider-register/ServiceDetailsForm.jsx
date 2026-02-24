@@ -12,7 +12,7 @@ export const ServiceDetailsForm = ({
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
             <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Category <span className="text-red-500">*</span></label>
+                <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Category :<span className="text-red-500">*</span></label>
                 <select
                     name="category"
                     value={data.category}
@@ -27,7 +27,7 @@ export const ServiceDetailsForm = ({
             </div>
 
             <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Sub-Category <span className="text-red-500">*</span></label>
+                <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Sub-Category :<span className="text-red-500">*</span></label>
                 <select
                     name="subCategory"
                     value={data.subCategory}
@@ -43,7 +43,7 @@ export const ServiceDetailsForm = ({
             </div>
 
             <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Service Name <span className="text-red-500">*</span></label>
+                <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Service Name :<span className="text-red-500">*</span></label>
                 <select
                     name="serviceName"
                     value={data.serviceName}
@@ -59,7 +59,7 @@ export const ServiceDetailsForm = ({
             </div>
 
             <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Price Type <span className="text-red-500">*</span></label>
+                <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Price Type :<span className="text-red-500">*</span></label>
                 <select
                     name="priceType"
                     value={data.priceType}
@@ -75,7 +75,7 @@ export const ServiceDetailsForm = ({
             </div>
 
             <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Price <span className="text-red-500">*</span></label>
+                <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Price :<span className="text-red-500">*</span></label>
                 <input
                     type="number"
                     name="price"
@@ -88,14 +88,14 @@ export const ServiceDetailsForm = ({
             </div>
 
             <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Commission</label>
+                <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Commission :</label>
                 <div className="p-3 bg-slate-900 text-white font-bold rounded-xl border border-slate-800 opacity-80 cursor-not-allowed">
                     10%
                 </div>
             </div>
 
             <div className="flex flex-col gap-2 md:col-span-1">
-                <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Service Image</label>
+                <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Service Image :</label>
                 <div className="relative flex">
                     <input
                         type="file"

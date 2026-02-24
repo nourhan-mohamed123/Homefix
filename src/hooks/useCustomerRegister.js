@@ -74,6 +74,7 @@ export const useCustomerRegister = () => {
                 lastname: formData.lastName,
                 email: formData.email,
                 password: formData.password,
+                contact_number : formData.phone,
                 cityOrCities: [formData.city],
                 account_type: 'customer',
                 address: formData.address || null,

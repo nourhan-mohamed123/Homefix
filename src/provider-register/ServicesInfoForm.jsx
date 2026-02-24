@@ -185,7 +185,7 @@ export default function ServicesInfoForm({
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-2">
                         <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                            Category <span className="text-red-500">*</span>
+                            Category :<span className="text-red-500">*</span>
                         </label>
                         <select
                             name="category"
@@ -193,7 +193,7 @@ export default function ServicesInfoForm({
                             onChange={handleServiceChange}
                             className="w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all text-left"
                         >
-                            <option value="">Select category</option>
+                            <option value="">Select category :</option>
                             {categories.map(cat => (
                                 <option key={cat} value={cat}>{cat}</option>
                             ))}
@@ -201,7 +201,7 @@ export default function ServicesInfoForm({
                     </div>
                     <div className="space-y-2">
                         <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                            Sub-category <span className="text-red-500">*</span>
+                            Sub-category :<span className="text-red-500">*</span>
                         </label>
                         <select
                             name="subCategory"
@@ -210,7 +210,7 @@ export default function ServicesInfoForm({
                             disabled={!currentService.category}
                             className={`w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all text-left ${!currentService.category ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
-                            <option value="">Select sub-category</option>
+                            <option value="">Select sub-category :</option>
                             {currentService.category && Object.keys(fullCategoryData[currentService.category] || {}).map(sub => (
                                 <option key={sub} value={sub}>{sub}</option>
                             ))}
@@ -218,7 +218,7 @@ export default function ServicesInfoForm({
                     </div>
                     <div className="space-y-2">
                         <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                            Service <span className="text-red-500">*</span>
+                            Service :<span className="text-red-500">*</span>
                         </label>
                         <select
                             name="serviceName"
@@ -227,7 +227,7 @@ export default function ServicesInfoForm({
                             disabled={!currentService.subCategory}
                             className={`w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all text-left ${!currentService.subCategory ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
-                            <option value="">Select service</option>
+                            <option value="">Select service :</option>
                             {currentService.category && currentService.subCategory &&
                                 fullCategoryData[currentService.category]?.[currentService.subCategory]?.map(service => (
                                     <option key={service} value={service}>{service}</option>
@@ -248,7 +248,7 @@ export default function ServicesInfoForm({
                     </div>
                     <div className="space-y-2">
                         <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                            Price Type <span className="text-red-500">*</span>
+                            Price Type :<span className="text-red-500">*</span>
                         </label>
                         <select
                             name="priceType"
@@ -264,7 +264,7 @@ export default function ServicesInfoForm({
                     </div>
                     <div className="space-y-2">
                         <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                            Price <span className="text-red-500">*</span>
+                            Price :<span className="text-red-500">*</span>
                         </label>
                         <input
                             type="number"
