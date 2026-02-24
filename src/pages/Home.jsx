@@ -3,7 +3,7 @@ import HeroSection from '../home/HeroSection';
 import PopularServices from '../home/PopularServices';
 import HowToBook from '../home/HowToBook';
 import CustomerReviews from '../home/CustomerReviews';
-import CallToAction from '../home/CallToAction';
+import ContactUs from '../home/ContactUs';
 
 export default function Home() {
   return (
@@ -12,7 +12,7 @@ export default function Home() {
       <PopularServices />
       <HowToBook />
       <CustomerReviews />
-      <CallToAction />
+      <ContactUs />
     </div>
   );
 }

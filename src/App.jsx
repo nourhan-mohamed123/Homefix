@@ -8,7 +8,7 @@ import Register from './pages/Login'
 import CustomerRegister from './pages/customerRegister'
 import ProviderRegister from './pages/ProviderRegister'
 import ProviderDashboard from './pages/ProviderDashboard'
-import ProviderSettings from './pages/ProviderSettings'
+
 
 const LayoutWrapper = ({ children }) => {
     const location = useLocation();
@@ -34,7 +34,6 @@ function App() {
                     <Route path="/customer-register" element={<CustomerRegister />} />
                     <Route path="/provider-register" element={<ProviderRegister />} />
                     <Route path="/provider-dashboard" element={<ProviderDashboard />} />
-                    <Route path="/provider-settings" element={<ProviderSettings />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </LayoutWrapper>

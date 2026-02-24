@@ -141,7 +141,7 @@ export default function PopularServices() {
     }, []);
 
     return (
-        <section id="servicesCard" className="bg-homefix-bg px-6 py-24 md:px-12 lg:px-20 font-['Poppins']">
+        <section id="services" className="bg-homefix-bg px-6 py-24 md:px-12 lg:px-20 font-['Poppins']">
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
                     <div>
@@ -167,7 +167,7 @@ export default function PopularServices() {
                     </div>
                 )}
                 {!loading && usingFallback && (
-                    <div className="flex items-center gap-3 bg-blue-50 border border-blue-100 text-blue-600 px-5 py-3 rounded-xl text-sm font-semibold mb-8">q
+                    <div className="flex items-center gap-3 bg-blue-50 border border-blue-100 text-blue-600 px-5 py-3 rounded-xl text-sm font-semibold mb-8">
                         <AlertCircle className="w-4 h-4 shrink-0" />
                         Showing featured services — live data will appear once the server is connected.
                     </div>

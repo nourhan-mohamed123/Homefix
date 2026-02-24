@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Search, ArrowRight, ShieldCheck, Star, Clock } from 'lucide-react';
 export default function HeroSection() {
     return (
-        <section className="relative w-full px-6 py-6 md:px-12 lg:px-20 pt-10 font-['Poppins']" style={{ minHeight: '0' }}>
+        <section id="home" className="relative w-full px-6 py-6 md:px-12 lg:px-20 pt-10 font-['Poppins']" style={{ minHeight: '0' }}>
             <div className="relative w-full rounded-[3rem] bg-[#0F172A] min-h-[520px] md:min-h-[580px] flex items-center overflow-hidden shadow-2xl">
                 <div className="absolute inset-0 w-full h-full">
                     <img

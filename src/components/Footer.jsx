@@ -5,7 +5,6 @@ const Footer = () => {
     const services = ['House Cleaning', 'Plumbing Repairs', 'Handyman Tasks', 'Electrical Help', 'Lawn Maintenance'];
     const company = ['About Us', 'Careers', 'Reviews', 'Become a Pro', 'Contact Support'];
     const safety = ['HomePro Guarantee', 'Safety Standards', 'Privacy Policy', 'Terms of Service'];
-
     return (
         <footer className="bg-[#f9fafb] border-t border-gray-100 pt-20 pb-10 px-6 md:px-20 lg:px-40">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">

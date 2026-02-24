@@ -1,6 +1,6 @@
 // API Configuration
-// Using Cloudflare tunnel for external access
-export const API_BASE_URL = 'https://achievement-dash-nov-pink.trycloudflare.com';
+// Using ngrok tunnel for external access
+export const API_BASE_URL = 'https://nonexponential-repulsively-kip.ngrok-free.dev';
 
 // API endpoints
 // API endpoints
@@ -10,7 +10,7 @@ export const API_ENDPOINTS = {
     LOGIN: `${API_BASE_URL}/auth/login`,
     SIGNUP: `${API_BASE_URL}/auth/signup`,
     REGISTER: `${API_BASE_URL}/auth/signup`, // Unified signup (or keep as register if needed, matched to signup for now)
-    LOGOUT: `${API_BASE_URL}/api/auth/logout`,
+    LOGOUT: `${API_BASE_URL}/auth/logout`,
     VERIFY: `${API_BASE_URL}/api/auth/verify`,
   },
   // Health check

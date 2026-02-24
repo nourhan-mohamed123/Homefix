@@ -2,11 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 
-export default function CallToAction() {
+export default function ContactUs() {
     return (
-        <section id="become-a-pro" className="px-6 py-16 md:px-20 lg:px-40 font-['Poppins']">
+        <section id="contactus" className="px-6 py-16 md:px-20 lg:px-40 font-['Poppins']">
             <div className="relative bg-gradient-to-br from-homefix-primary via-[#1a3578] to-homefix-accent rounded-[2.5rem] p-12 md:p-16 text-center shadow-2xl overflow-hidden">
-                {/* Decorative circles */}
                 <div className="absolute -top-10 -right-10 w-52 h-52 bg-white/5 rounded-full pointer-events-none"></div>
                 <div className="absolute -bottom-12 -left-12 w-64 h-64 bg-white/5 rounded-full pointer-events-none"></div>
                 <div className="absolute top-1/2 right-12 -translate-y-1/2 w-24 h-24 bg-white/5 rounded-full pointer-events-none hidden lg:block"></div>

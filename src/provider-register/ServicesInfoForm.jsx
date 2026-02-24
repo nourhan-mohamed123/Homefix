@@ -299,19 +299,6 @@ export default function ServicesInfoForm({
                             </label>
                         </div>
                     </div>
-                    <div className="md:col-span-1 space-y-2">
-                        <label className="text-homefix-text font-extrabold text-[13px] uppercase tracking-wide text-left block">
-                            Description <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            name="description"
-                            value={currentService.description}
-                            onChange={handleServiceChange}
-                            className="w-full bg-gray-50 px-5 py-4 outline-none rounded-2xl border border-gray-200 focus:border-homefix-accent focus:ring-1 focus:ring-homefix-accent text-homefix-text font-medium transition-all text-left"
-                            placeholder="Description"
-                        />
-                    </div>
                 </div>
                 <div className="mt-6 flex items-center gap-3">
                     <div className="relative inline-block w-12 h-6 transition duration-200 ease-in-out rounded-full border border-gray-300">
@@ -371,7 +358,17 @@ export default function ServicesInfoForm({
                     </button>
                 </div>
             </div>
-            {services.length > 0 && (
+            {services.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 px-6 mb-8 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50/60 text-center">
+                    <div className="w-16 h-16 rounded-2xl bg-white border border-gray-100 flex items-center justify-center mb-4 shadow-sm">
+                        <Plus className="w-7 h-7 text-homefix-primary" />
+                    </div>
+                    <h4 className="text-homefix-text font-black text-base mb-1">No services added yet</h4>
+                    <p className="text-gray-400 text-sm font-medium max-w-xs leading-relaxed">
+                        Fill in the form above and click <span className="font-bold text-homefix-text">Add</span> to include your first service offering.
+                    </p>
+                </div>
+            ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
                     {services.map(service => (
                         <ServiceCard

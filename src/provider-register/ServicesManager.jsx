@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ServiceDetailsForm } from './ServiceDetailsForm';
-import ServiceCard from '../../../components/provider-register/ServiceCard';
-import TimeSlotsModal from '../../../components/provider-register/TimeSlotsModal';
+import { ServiceDetailsForm } from './ServiceDetailsForm.jsx';
+import ServiceCard from './ServiceCard.jsx';
+import TimeSlotsModal from './TimeSlotsModal.jsx';
 
 const fullCategoryData = {
     'Plumbing': {
@@ -82,7 +82,7 @@ export const ServicesManager = ({
         ? (fullCategoryData[currentService.category]?.[currentService.subCategory] || [])
         : [];
 
-        const handleServiceChange = (e) => {
+    const handleServiceChange = (e) => {
         const { name, value, type, checked } = e.target;
         setCurrentService(prev => {
             const newState = {

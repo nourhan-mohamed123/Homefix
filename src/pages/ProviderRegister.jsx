@@ -1,11 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { useProviderRegister } from '../features/provider-register/hooks/useProviderRegister';
-import { BasicDetailsForm } from '../features/provider-register/components/BasicDetailsForm';
-import { ServicesManager } from '../features/provider-register/components/ServicesManager';
-import TabNavigation from '../components/provider-register/TabNavigation';
-import FinalConfirmationModal from '../components/provider-register/FinalConfirmationModal';
-import Logo from '../components/Logo';
+import { useProviderRegister } from '../hooks/useProviderRegister.js';
+import { BasicDetailsForm } from '../provider-register/BasicDetailsForm.jsx';
+import { ServicesManager } from '../provider-register/ServicesManager.jsx';
+import TabNavigation from '../provider-register/TabNavigation.jsx';
+import FinalConfirmationModal from '../provider-register/FinalConfirmationModal.jsx';
+import Logo from '../components/Logo.jsx';
 
 export default function ProviderRegister() {
     const {
@@ -33,8 +33,6 @@ export default function ProviderRegister() {
     return (
         <div className="min-h-screen bg-homefix-secondary flex items-center justify-center p-6 py-12 font-['Poppins']">
             <div className="w-full max-w-5xl bg-homefix-bg shadow-2xl overflow-hidden flex flex-col rounded-[2rem]">
-
-                {/* Header Section */}
                 <div className="bg-gradient-to-br from-homefix-bg to-gray-100 p-12 flex flex-col items-center justify-center min-h-[200px] relative">
                     <button
                         onClick={handleBack}
@@ -94,6 +92,7 @@ export default function ProviderRegister() {
             <FinalConfirmationModal
                 isOpen={isConfirmOpen}
                 formData={formData}
+                services={services}
                 onConfirm={syncWithIntegromat}
                 onCancel={() => { setIsConfirmOpen(false); setRegisterError(''); }}
                 error={registerError}

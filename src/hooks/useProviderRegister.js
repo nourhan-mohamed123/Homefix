@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { API_ENDPOINTS, apiCall } from '../../../config/api';
+import { API_ENDPOINTS, apiCall } from '../config/api.js';
 
 export const useProviderRegister = () => {
     const navigate = useNavigate();
@@ -9,29 +9,20 @@ export const useProviderRegister = () => {
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [registerError, setRegisterError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
-
-    // Main Provider Data
     const [formData, setFormData] = useState({
         name: '',
-        profession: '',
         email: '',
         phone: '',
         password: '',
         confirmPassword: '',
         address: '',
         city: '',
-        state: '',
-        zipCode: '',
-        bio: '',
         serviceAreas: [],
         idDocument: null,
         certifications: null
     });
 
     const [selectedDays, setSelectedDays] = useState([]);
-
-    // --- Handlers ---
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -84,11 +75,9 @@ export const useProviderRegister = () => {
                 : [...prev, day]
         );
     };
-
-    // Service List Management
     const handleAddService = (service) => {
         setServices(prev => [...prev, service]);
-    };
+    };  
 
     const handleEditService = (serviceId, updatedService) => {
         setServices(prev => prev.map(s => s.id === serviceId ? updatedService : s));
@@ -112,7 +101,6 @@ export const useProviderRegister = () => {
         setIsConfirmOpen(true);
     };
 
-    // "Sync with Integromat" (Backend Sync)
     const syncWithIntegromat = async () => {
         setRegisterError('');
         const cities = formData.serviceAreas?.length ? formData.serviceAreas : (formData.city ? [formData.city] : []);
@@ -136,7 +124,6 @@ export const useProviderRegister = () => {
                 cityOrCities: cities,
                 account_type: 'provider',
                 address: formData.address || null,
-                // Include services if backend supports receiving them here, for now we follow existing logic
             };
 
             await apiCall(API_ENDPOINTS.AUTH.SIGNUP, {

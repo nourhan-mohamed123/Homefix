@@ -223,16 +223,26 @@ const CustomerRegister = () => {
                 />
               </div>
             </div>
-            <div className="w-full text-center space-y-4 pt-4 border-t border-gray-200 mt-4">
-              <p className="text-homefix-text font-medium text-sm">
-                Already Have Account?
-                <Link to="/login" className="font-black hover:text-homefix-accent transition-colors ml-1">
-                  Sign In
+            <div className="flex flex-col items-center gap-6 pt-6">
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-homefix-primary text-white px-20 py-4 text-lg font-black tracking-widest rounded-xl hover:bg-homefix-accent transition-all duration-300 shadow-lg shadow-homefix-primary/20 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Signing Up...' : 'Sign Up'}
+              </button>
+
+              <div className="w-full text-center space-y-4 pt-4 border-t border-gray-100">
+                <p className="text-homefix-text font-medium text-sm">
+                  Already Have Account?
+                  <Link to="/login" className="font-black hover:text-homefix-accent transition-colors ml-1">
+                    Sign In
+                  </Link>
+                </p>
+                <Link to="/provider-register" className="text-homefix-text font-black uppercase text-[10px] tracking-widest cursor-pointer hover:text-homefix-accent transition-colors">
+                  Want to Sign Up as a Provider?
                 </Link>
-              </p>
-              <Link to="/provider-register" className="text-homefix-text font-black uppercase text-xs tracking-widest cursor-pointer hover:text-homefix-accent transition-colors">
-                Want to Sign Up as a Provider?
-              </Link>
+              </div>
             </div>
           </form>
         </div>
