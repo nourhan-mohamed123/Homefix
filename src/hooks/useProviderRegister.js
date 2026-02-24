@@ -79,7 +79,7 @@ export const useProviderRegister = () => {
     };
     const handleAddService = (service) => {
         setServices(prev => [...prev, service]);
-    };  
+    };
 
     const handleEditService = (serviceId, updatedService) => {
         setServices(prev => prev.map(s => s.id === serviceId ? updatedService : s));
@@ -105,7 +105,7 @@ export const useProviderRegister = () => {
 
     const syncWithIntegromat = async () => {
         setRegisterError('');
-        
+
         setIsSubmitting(true);
         try {
             const registerData = {
@@ -113,17 +113,17 @@ export const useProviderRegister = () => {
                 lastName: formData.lastName,
                 email: formData.email,
                 password: formData.password,
-                phone: formData.phone,
-                city: formData.city, 
+                contact_number: formData.phone,
+                city: formData.city,
                 address: formData.address || null,
                 discretion: formData.discretion,
-                role: 'provider' 
+                role: 'provider'
             };
             await apiCall(API_ENDPOINTS.AUTH.SIGNUP, {
                 method: 'POST',
                 body: JSON.stringify(registerData),
             });
-            
+
             navigate('/provider-dashboard');
             return true;
         } catch (err) {
@@ -141,7 +141,7 @@ export const useProviderRegister = () => {
         registerError,
         isSubmitting,
         selectedDays,
-        
+
         setActiveTab,
         setIsConfirmOpen,
         setRegisterError,
