@@ -1,6 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
+import { ChevronDown } from 'lucide-react';
+
+const SignUpDropdown = () => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <div className="relative inline-block text-left">
+
+            <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="flex items-center gap-2 px-6 py-2 text-[13px] font-bold rounded-xl bg-homefix-primary text-white shadow-md transition-all duration-300 hover:bg-opacity-90"
+            >
+                Sign Up
+                <ChevronDown size={16} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+            </button>
+
+            {isOpen && (
+                <>
+                    <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)}></div>
+
+                    <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-2xl shadow-xl z-20 overflow-hidden backdrop-blur-sm bg-white/90">
+                        <Link
+                            to="/customer-register"
+                            className="block px-4 py-3 text-[13px] text-gray-700 hover:bg-homefix-primary hover:text-white transition-colors border-b border-gray-100"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Sign up as Customer
+                        </Link>
+                        <Link
+                            to="/provider-register"
+                            className="block px-4 py-3 text-[13px] text-gray-700 hover:bg-homefix-primary hover:text-white transition-colors"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            Sign up as Provider
+                        </Link>
+                    </div>
+                </>
+            )}
+        </div>
+    );
+};
 
 const Navbar = () => {
     const navLinks = [
@@ -17,23 +58,7 @@ const Navbar = () => {
                         Login
                     </button>
                 </Link>
-                <div className="flex p-1 bg-gray-100/80 backdrop-blur-sm border border-gray-200 rounded-2xl group">
-                    <Link to="/customer-register">
-                        <button className="relative px-6 py-2 text-[13px] font-bold rounded-xl transition-all duration-300 
-                bg-homefix-primary text-white shadow-md 
-                group-hover:bg-transparent group-hover:text-gray-600 group-hover:shadow-none
-                hover:!bg-homefix-primary hover:!text-white hover:!shadow-md">
-                            Customer
-                        </button>
-                    </Link>
-                    <Link to="/provider-register">
-                        <button className="relative px-6 py-2 text-[13px] font-bold rounded-xl transition-all duration-300 
-                text-gray-600 bg-transparent
-                 hover:bg-homefix-primary hover:text-white hover:shadow-md">
-                            Provider
-                        </button>
-                    </Link>
-                </div>
+                <SignUpDropdown />
             </div>
             <nav className="hidden lg:flex flex-1 justify-center gap-10">
                 {navLinks.map((link) => (
