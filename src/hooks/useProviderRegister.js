@@ -10,13 +10,15 @@ export const useProviderRegister = () => {
     const [registerError, setRegisterError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
-        name: '',
+        firstName: '',
+        lastName: '',
         email: '',
         phone: '',
         password: '',
         confirmPassword: '',
         address: '',
         city: '',
+        discretion: '',
         serviceAreas: [],
         idDocument: null,
         certifications: null
@@ -103,29 +105,20 @@ export const useProviderRegister = () => {
 
     const syncWithIntegromat = async () => {
         setRegisterError('');
-        const cities = formData.serviceAreas?.length ? formData.serviceAreas : (formData.city ? [formData.city] : []);
         
-        if (!cities.length) {
-            setRegisterError('Please select at least one service area or city.');
-            return false;
-        }
-
         setIsSubmitting(true);
         try {
-            const nameParts = (formData.name || '').trim().split(/\s+/);
-            const firstname = nameParts[0] || '';
-            const lastname = nameParts.slice(1).join(' ') || nameParts[0] || '';
-
             const registerData = {
-                firstname,
-                lastname,
+                firstName: formData.firstName,
+                lastName: formData.lastName,
                 email: formData.email,
                 password: formData.password,
-                cityOrCities: cities,
-                account_type: 'provider',
+                phone: formData.phone,
+                city: formData.city, 
                 address: formData.address || null,
+                discretion: formData.discretion,
+                role: 'provider' 
             };
-
             await apiCall(API_ENDPOINTS.AUTH.SIGNUP, {
                 method: 'POST',
                 body: JSON.stringify(registerData),
@@ -140,9 +133,7 @@ export const useProviderRegister = () => {
             setIsSubmitting(false);
         }
     };
-
     return {
-        // State
         formData,
         services,
         activeTab,
@@ -151,12 +142,9 @@ export const useProviderRegister = () => {
         isSubmitting,
         selectedDays,
         
-        // State Setters (if needed strictly, but handlers are better)
         setActiveTab,
         setIsConfirmOpen,
         setRegisterError,
-
-        // Handlers
         handleChange,
         handleServiceAreaChange,
         handleFileChange,

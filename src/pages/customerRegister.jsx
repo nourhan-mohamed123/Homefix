@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { API_ENDPOINTS, apiCall } from '../config/api';
+
 const CustomerRegister = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -17,6 +18,7 @@ const CustomerRegister = () => {
   const [error, setError] = useState('');
   const [fieldErrors, setFieldErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -24,6 +26,7 @@ const CustomerRegister = () => {
       [name]: value
     }));
   };
+
   const handlePhoneChange = (e) => {
     const { value } = e.target;
     if (value && !/^\d+$/.test(value)) return;
@@ -38,6 +41,7 @@ const CustomerRegister = () => {
       });
     }
   };
+
   const handleConfirmPasswordChange = (e) => {
     const { value } = e.target;
     handleChange(e);
@@ -52,6 +56,7 @@ const CustomerRegister = () => {
       });
     }
   };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -89,6 +94,7 @@ const CustomerRegister = () => {
       setLoading(false);
     }
   };
+
   return (
     <div className="min-h-screen bg-homefix-secondary flex items-center justify-center p-6 py-12 font-['Poppins']">
       <div className="w-full max-w-5xl bg-homefix-bg shadow-2xl overflow-hidden flex flex-col rounded-[2rem]">
@@ -117,7 +123,7 @@ const CustomerRegister = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-homefix-text font-bold text-sm">First Name : <span className="text-homefix-alert">*</span></label>
+                <label className="text-homefix-text font-bold text-sm">First Name : <span className="text-homefix-alert text-red-500">*</span></label>
                 <input
                   type="text"
                   name="firstName"
@@ -129,7 +135,7 @@ const CustomerRegister = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-homefix-text font-bold text-sm">Last Name : <span className="text-homefix-alert">*</span></label>
+                <label className="text-homefix-text font-bold text-sm">Last Name : <span className="text-homefix-alert text-red-500">*</span></label>
                 <input
                   type="text"
                   name="lastName"
@@ -143,7 +149,7 @@ const CustomerRegister = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-homefix-text font-bold text-sm">Password <span className="text-homefix-alert">*</span></label>
+                <label className="text-homefix-text font-bold text-sm">Password <span className="text-homefix-alert text-red-500">*</span></label>
                 <input
                   type="password"
                   name="password"
@@ -156,7 +162,7 @@ const CustomerRegister = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-homefix-text font-bold text-sm">Confirm Password <span className="text-homefix-alert">*</span></label>
+                <label className="text-homefix-text font-bold text-sm">Confirm Password <span className="text-homefix-alert ml-1 text-red-500">*</span></label>
                 <input
                   type="password"
                   name="confirmPassword"
@@ -171,7 +177,7 @@ const CustomerRegister = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-homefix-text font-bold text-sm">Email <span className="text-homefix-alert">*</span></label>
+                <label className="text-homefix-text font-bold text-sm">Email <span className="text-homefix-alert ml-1 text-red-500">*</span></label>
                 <input
                   type="email"
                   name="email"
@@ -183,7 +189,7 @@ const CustomerRegister = () => {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-homefix-text font-bold text-sm">Phone Number <span className="text-homefix-alert">*</span></label>
+                <label className="text-homefix-text font-bold text-sm">Phone Number <span className="text-homefix-alert ml-1 text-red-500">*</span></label>
                 <input
                   type="tel"
                   name="phone"
@@ -199,7 +205,7 @@ const CustomerRegister = () => {
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="space-y-2">
-                <label className="text-homefix-text font-bold text-sm">City <span className="text-homefix-alert">*</span></label>
+                <label className="text-homefix-text font-bold text-sm">City <span className="text-homefix-alert ml-1 text-red-500">*</span></label>
                 <input
                   type="text"
                   name="city"
@@ -250,4 +256,5 @@ const CustomerRegister = () => {
     </div>
   );
 };
+
 export default CustomerRegister;

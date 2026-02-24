@@ -1,33 +1,26 @@
-// API Configuration
-// Using ngrok tunnel for external access
+
 export const API_BASE_URL = 'https://nonexponential-repulsively-kip.ngrok-free.dev';
 
-// API endpoints
-// API endpoints
-export const API_ENDPOINTS = {
-  // Auth endpoints
-  AUTH: {
+export const API_ENDPOINTS = {  AUTH: {
     LOGIN: `${API_BASE_URL}/auth/login`,
     SIGNUP: `${API_BASE_URL}/auth/signup`,
-    REGISTER: `${API_BASE_URL}/auth/signup`, // Unified signup (or keep as register if needed, matched to signup for now)
+    REGISTER: `${API_BASE_URL}/auth/signup`, 
+    REGISTER_PROVIDER: `${API_BASE_URL}/auth/signup`,
     LOGOUT: `${API_BASE_URL}/auth/logout`,
     VERIFY: `${API_BASE_URL}/api/auth/verify`,
   },
-  // Health check
   HEALTH: `${API_BASE_URL}/api/health`,
-  // Quick check
   CHK: `${API_BASE_URL}/chk`,
 };
 
-// Helper function to make API calls
 export const apiCall = async (url, options = {}) => {
   try {
     const response = await fetch(url, {
       ...options,
-      credentials: 'include', // Send/receive cookies for auth
+      credentials: 'include', 
       headers: {
         'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true', // Skip ngrok browser warning
+        'ngrok-skip-browser-warning': 'true', 
         ...options.headers,
       },
     });

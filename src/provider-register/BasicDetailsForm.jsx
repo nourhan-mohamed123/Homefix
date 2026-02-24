@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown, X } from 'lucide-react';
-
 export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [errors, setErrors] = useState({});
 
     const cities = [
         "Cairo", "Giza", "Alexandria", "Shubra El Kheima", "Port Said", "Suez", "Luxor", "Mansoura",
-        "El-Mahalla El-Kubra", "Tanta", "Asyut", "Ismailia", "Fayyum", "Zagazig", "Aswan", "Damietta",
-        "Damanhur", "Minya", "Beni Suef", "Qena", "Sohag", "Hurghada", "6th of October", "Shibin El Kom"
+        "El-Mahalla El-Kubra", "Tanta", "Asyut", "Ismailia", "Fayyum", "Zagazig", "Aswan", "Damietta"
     ];
-
     const handlePhoneChange = (e) => {
         const { value } = e.target;
         if (value && !/^\d+$/.test(value)) return;
@@ -27,7 +24,6 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
             });
         }
     };
-
     const handleConfirmPasswordChange = (e) => {
         onChange(e);
         if (e.target.value && e.target.value !== data.password) {
@@ -40,7 +36,6 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
             });
         }
     };
-
     const toggleCity = (city) => {
         const currentAreas = data.serviceAreas || [];
         if (currentAreas.includes(city)) {
@@ -54,7 +49,6 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
         const currentAreas = data.serviceAreas || [];
         onServiceAreaChange(currentAreas.filter(c => c !== city));
     };
-
     return (
         <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -65,16 +59,25 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
         >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex flex-col gap-2">
-                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Name <span className="text-red-500">*</span></label>
+                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">First Name <span className="text-red-500">*</span></label>
                     <input
-                        name="name"
-                        value={data.name}
+                        name="firstName"
+                        value={data.firstName}
                         onChange={onChange}
                         className="p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-homefix-primary focus:border-transparent outline-none transition-all"
-                        placeholder="Enter your name"
+                        placeholder="First Name"
                     />
                 </div>
-
+                <div className="flex flex-col gap-2">
+                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Last Name <span className="text-red-500">*</span></label>
+                    <input
+                        name="lastName"
+                        value={data.lastName}
+                        onChange={onChange}
+                        className="p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-homefix-primary focus:border-transparent outline-none transition-all"
+                        placeholder="Last Name"
+                    />
+                </div>
                 <div className="flex flex-col gap-2">
                     <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Email <span className="text-red-500">*</span></label>
                     <input
@@ -86,7 +89,6 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                         placeholder="Enter your email"
                     />
                 </div>
-
                 <div className="flex flex-col gap-2">
                     <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Phone <span className="text-red-500">*</span></label>
                     <input
@@ -100,8 +102,6 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                     />
                     {errors.phone && <span className="text-red-500 text-xs">{errors.phone}</span>}
                 </div>
-
-                {/* Address */}
                 <div className="flex flex-col gap-2">
                     <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Address <span className="text-red-500">*</span></label>
                     <input
@@ -112,8 +112,16 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                         placeholder="Enter your address"
                     />
                 </div>
-
-                {/* Password */}
+                <div className="flex flex-col gap-2">
+                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">City <span className="text-red-500">*</span></label>
+                    <input
+                        name="city"
+                        value={data.city}
+                        onChange={onChange}
+                        className="p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-homefix-primary focus:border-transparent outline-none transition-all"
+                        placeholder="Enter your city"
+                    />
+                </div>
                 <div className="flex flex-col gap-2">
                     <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Password <span className="text-red-500">*</span></label>
                     <input
@@ -125,8 +133,6 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                         placeholder="Create a password"
                     />
                 </div>
-
-                {/* Confirm Password */}
                 <div className="flex flex-col gap-2">
                     <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Confirm Password <span className="text-red-500">*</span></label>
                     <input
@@ -139,8 +145,17 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                     />
                     {errors.confirmPassword && <span className="text-red-500 text-xs">{errors.confirmPassword}</span>}
                 </div>
-
-                {/* Service Areas */}
+                <div className="col-span-1 md:col-span-2 flex flex-col gap-2">
+                    <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Discretion <span className="text-red-500">*</span></label>
+                    <textarea
+                        name="discretion"
+                        value={data.discretion}
+                        onChange={onChange}
+                        className="p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-homefix-primary focus:border-transparent outline-none transition-all min-h-[120px] resize-none"
+                        placeholder="Tell us about yourself or your service discretion..."
+                        required
+                    />
+                </div>
                 <div className="col-span-1 md:col-span-2 flex flex-col gap-2 bg-white rounded-xl relative z-10">
                     <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Service Areas <span className="text-red-500">*</span></label>
                     <div className="relative">
@@ -162,7 +177,6 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                             )}
                             <ChevronDown className={`absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 transition-transform ${isDropdownOpen ? 'rotate-180' : ''}`} size={20} />
                         </div>
-
                         {isDropdownOpen && (
                             <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 max-h-[300px] overflow-y-auto z-50 p-2">
                                 <div className="grid grid-cols-2 gap-1">
@@ -183,7 +197,6 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                     </div>
                 </div>
             </div>
-
             <div className="flex justify-center pt-8">
                 <button
                     onClick={onNext}
