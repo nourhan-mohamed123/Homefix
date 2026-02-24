@@ -82,7 +82,7 @@ const CustomerRegister = () => {
         cityOrCities: [formData.city],
         account_type: 'customer',
         address: formData.address || null,
-        contact_number: phone
+        contact_number: formData.phone
       };
       console.log(registerData)
       await apiCall(API_ENDPOINTS.AUTH.SIGNUP, {
