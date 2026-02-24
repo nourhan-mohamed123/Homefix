@@ -84,6 +84,7 @@ const CustomerRegister = () => {
         address: formData.address || null,
         contact_number: phone
       };
+      console.log(registerData)
       await apiCall(API_ENDPOINTS.AUTH.SIGNUP, {
         method: 'POST',
         body: JSON.stringify(registerData),
