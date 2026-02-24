@@ -109,15 +109,15 @@ export const useProviderRegister = () => {
         setIsSubmitting(true);
         try {
             const registerData = {
-                firstName: formData.firstName,
-                lastName: formData.lastName,
+                firstname: formData.firstName,
+                lastname: formData.lastName,
                 email: formData.email,
                 password: formData.password,
                 contact_number: formData.phone,
-                city: formData.city,
+                cityOrCities: formData.city,
                 address: formData.address || null,
-                discretion: formData.discretion,
-                role: 'provider'
+                discription: formData.discretion,
+                account_type: 'provider'
             };
             await apiCall(API_ENDPOINTS.AUTH.SIGNUP, {
                 method: 'POST',
