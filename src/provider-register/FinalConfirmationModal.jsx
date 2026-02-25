@@ -75,7 +75,7 @@ export default function FinalConfirmationModal({ isOpen, formData, onConfirm, on
                                     Wait, let me edit
                                 </button>
                             </div>
-                            <div className="mt-8 pt-6 border-t border-slate-50 text-center text-center">
+                            <div className="mt-8 pt-6 border-t border-slate-50 text-center">
                                 <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest leading-relaxed">
                                     By confirming, you agree to our <br />
                                 </p>

@@ -9,6 +9,7 @@ export const ServiceDetailsForm = ({
     serviceOptions = [],
     onFileChange
 }) => {
+    console.log(data)
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
             <div className="flex flex-col gap-2">
@@ -21,7 +22,7 @@ export const ServiceDetailsForm = ({
                 >
                     <option value="">Select Category</option>
                     {categories.map(cat => (
-                        <option key={cat} value={cat}>{cat}</option>
+                        <option key={cat.category_id} value={cat.category_id}>{cat.category_name}</option>
                     ))}
                 </select>
             </div>
@@ -33,11 +34,18 @@ export const ServiceDetailsForm = ({
                     value={data.subCategory}
                     onChange={onUpdate}
                     disabled={!data.category}
-                    className={`p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-homefix-primary outline-none transition-all ${!data.category ? 'opacity-50 cursor-not-allowed' : ''}`}
+                    className={`p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-homefix-primary outline-none transition-all ${!data.category ? 'opacity-50 cursor-not-allowed' : ''
+                        }`}
                 >
                     <option value="">Select Sub-Category</option>
+
                     {subCategories.map(sub => (
-                        <option key={sub} value={sub}>{sub}</option>
+                        <option
+                            key={sub.sub_category_id}
+                            value={sub.sub_category_id}
+                        >
+                            {sub.sub_category_name}
+                        </option>
                     ))}
                 </select>
             </div>
@@ -53,7 +61,7 @@ export const ServiceDetailsForm = ({
                 >
                     <option value="">Select Service</option>
                     {serviceOptions.map(svc => (
-                        <option key={svc} value={svc}>{svc}</option>
+                        <option key={svc.service_id} value={svc.service_id}>{svc.service_name}</option>
                     ))}
                 </select>
             </div>
@@ -67,10 +75,9 @@ export const ServiceDetailsForm = ({
                     className="p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-homefix-primary outline-none transition-all"
                 >
                     <option value="">Select Price Type</option>
-                    <option value="Fixed">Fixed</option>
-                    <option value="Per Hour">Per Hour</option>
-                    <option value="Per Day">Per Day</option>
-                    <option value="Per Project">Per Project</option>
+                    <option value="fixed">Fixed</option>
+                    <option value="hourly">Hourly</option>
+                    <option value="free">Free</option>
                 </select>
             </div>
 

@@ -13,7 +13,7 @@ export const ServicesManager = ({
     onDeleteService,
     onSkipForLater,
     onSubmit,
-    allServices = {}
+    allServices
 }) => {
     const [currentService, setCurrentService] = useState({
         category: '',
@@ -32,10 +32,24 @@ export const ServicesManager = ({
     const [editingId, setEditingId] = useState(null);
     const [currentDay, setCurrentDay] = useState(null);
 
-    const categories = Object.keys(allServices);
-    const subCategories = currentService.category ? Object.keys(allServices[currentService.category] || {}) : [];
+    const categories = allServices
+        .map(s => ({ category_name: s.category_name, category_id: s.category_id }))
+        .filter((category, index, self) =>
+            index === self.findIndex(c => c.category_id === category.category_id)
+        );
+    const subCategories = currentService.category
+        ? allServices
+            .filter(s => s.category_id === Number(currentService.category))
+            .filter((s, i, arr) =>
+                i === arr.findIndex(x => x.sub_category_id === s.sub_category_id)
+            )
+            .map(s => ({
+                sub_category_id: s.sub_category_id,
+                sub_category_name: s.sub_category_name
+            }))
+        : [];
     const serviceOptions = (currentService.category && currentService.subCategory)
-        ? (allServices[currentService.category]?.[currentService.subCategory] || [])
+        ? (allServices.filter(s => s.sub_category_id === Number(currentService.subCategory)))
         : [];
 
     const handleServiceChange = (e) => {
@@ -128,6 +142,7 @@ export const ServicesManager = ({
 
 
     return (
+
         <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}

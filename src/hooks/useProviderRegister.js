@@ -33,6 +33,20 @@ export const useProviderRegister = () => {
                     apiCall(API_ENDPOINTS.CITIES),
                     apiCall(API_ENDPOINTS.SERVICES)
                 ]);
+                //serviceData is like this
+                //{
+                //     "service_id": 1,
+                //     "service_name": "Deep House Cleaning",
+                //     "sub_category_id": 1,
+                //     "sub_category_name": "Cleaning",
+                //     "category_name": "Home Services",
+                //     "category_id": 1,
+                //     "commission_type": "percentage",
+                //     "commission_value": "10.00",
+                //     "status": "active",
+                //     "discount": "5.00",
+                //     "pricing": null
+                // },
                 citiesData = citiesData.map(city => city.name);
                 setCities(citiesData.cities || citiesData || []);
                 setAllServices(servicesData.services || servicesData || {});
