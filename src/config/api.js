@@ -11,8 +11,8 @@ export const API_ENDPOINTS = {  AUTH: {
   },
   HEALTH: `${API_BASE_URL}/api/health`,
   CHK: `${API_BASE_URL}/chk`,
-  CITIES: `${API_BASE_URL}/cities`,
-  SERVICES: `${API_BASE_URL}/services`,
+  CITIES: `${API_BASE_URL}/city`,
+  SERVICES: `${API_BASE_URL}/service`,
 };
 
 export const apiCall = async (url, options = {}) => {

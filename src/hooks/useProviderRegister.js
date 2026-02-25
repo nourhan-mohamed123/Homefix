@@ -29,10 +29,11 @@ export const useProviderRegister = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const [citiesData, servicesData] = await Promise.all([
+                let [citiesData, servicesData] = await Promise.all([
                     apiCall(API_ENDPOINTS.CITIES),
                     apiCall(API_ENDPOINTS.SERVICES)
                 ]);
+                citiesData = citiesData.map(city => city.name);
                 setCities(citiesData.cities || citiesData || []);
                 setAllServices(servicesData.services || servicesData || {});
             } catch (error) {
