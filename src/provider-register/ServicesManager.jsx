@@ -4,51 +4,6 @@ import { ServiceDetailsForm } from './ServiceDetailsForm.jsx';
 import ServiceCard from './ServiceCard.jsx';
 import TimeSlotsModal from './TimeSlotsModal.jsx';
 
-const fullCategoryData = {
-    'Plumbing': {
-        'Pipe Installation': ['New Pipe Setup', 'Pipe Replacement', 'Pipe Insulation', 'Gas Pipe Installation'],
-        'Leak Repair': ['Faucet Leak Fix', 'Pipe Leak Sealing', 'Shower Leak Repair', 'Toilet Leak Fix'],
-        'Drain Cleaning': ['Kitchen Sink Unclogging', 'Bathroom Drain Cleaning', 'Main Sewer Line Cleaning', 'Floor Drain Cleaning'],
-        'Water Heater Repair': ['Tankless Water Heater Fix', 'Electric Heater Repair', 'Gas Heater Maintenance', 'Thermostat Replacement'],
-        'Toilet Repair': ['Flush Mechanism Repair', 'Toilet Seat Replacement', 'Clog Removal', 'Seal Replacement']
-    },
-    'Electrical': {
-        'Wiring & Rewiring': ['House Rewiring', 'New Circuit Installation', 'Wiring Repair', 'Socket Rewiring'],
-        'Lighting Installation': ['Chandelier Installation', 'LED Light Setup', 'Outdoor Lighting', 'Recessed Lighting'],
-        'Panel Upgrades': ['Fuse Box Replacement', 'Circuit Breaker Upgrade', 'Heavy Load Panel Upgrade', 'Grounding Installation'],
-        'Outlet & Switch Repair': ['Faulty Outlet Fix', 'Switch Replacement', 'GFCI Outlet Installation', 'Dimmer Switch Setup'],
-        'Ceiling Fan Installation': ['New Fan Assembly', 'Old Fan Replacement', 'Fan Balancing', 'Fan Wiring Fix']
-    },
-    'Carpentry': {
-        'Furniture Assembly': ['IKEA Furniture Assembly', 'Custom Table Assembly', 'Bed Frame Setup', 'Wardrobe Assembly'],
-        'Cabinet Installation': ['Kitchen Cabinet Hanging', 'Bathroom Vanity Installation', 'Custom Cabinet Building', 'Cabinet Door Alignment'],
-        'Door Repair': ['Hinge Replacement', 'Door Frame Repair', 'Lock Installation', 'Sliding Door Fix'],
-        'Window Frame Repair': ['Rotten Wood Replacement', 'Frame Sealing', 'Window Sill Repair', 'Sash Replacement'],
-        'Custom Shelving': ['Floating Shelf Installation', 'Bookcase Building', 'Closet Organization System', 'Garage Shelving']
-    },
-    'Painting': {
-        'Interior Painting': ['Wall Painting', 'Ceiling Painting', 'Trim & Molding Painting', 'Accent Wall'],
-        'Exterior Painting': ['House Siding Painting', 'Fence Painting', 'Garage Door Painting', 'Deck Painting'],
-        'Wall Papering': ['Wallpaper Installation', 'Wallpaper Removal', 'Wall Texture Application', 'Border Application'],
-        'Deck Staining': ['Deck Cleaning & Staining', 'railing Staining', 'Sealant Application', 'Color Refinishing'],
-        'Cabinet Painting': ['Kitchen Cabinet Refinishing', 'Bathroom Cabinet Painting', 'Custom Color Spraying', 'Gloss Finish Application']
-    },
-    'Cleaning': {
-        'Deep Cleaning': ['Full Home Deep Clean', 'Kitchen Deep Clean', 'Bathroom Sanitization', 'Post-Construction Clean'],
-        'Carpet Cleaning': ['Steam Cleaning', 'Stain Removal', 'Odor Neutralization', 'Rug Deep Clean'],
-        'Window Cleaning': ['Interior Window Wipe', 'Exterior Window Wash', 'Screen Cleaning', 'Track Cleaning'],
-        'Move-in/Move-out Cleaning': ['Apartment Turnover', 'End of Tenancy Clean', 'New Home Sanitization', 'Garage Sweep'],
-        'Upholstery Cleaning': ['Sofa Steam Clean', 'Chair Stain Removal', 'Mattress Sanitization', 'Curtain Refresh']
-    },
-    'HVAC': {
-        'AC Repair': ['Compressor Fix', 'Refrigerant Refill', 'Fan Motor Replacement', 'Capacitor Change'],
-        'Heater Repair': ['Pilot Light Fix', 'Heat Exchanger Repair', 'Blower Motor Replacement', 'Ignition Sensor Fix'],
-        'Duct Cleaning': ['Air Duct Vacuuming', 'Vent Sanitization', 'Filter Replacement', 'Mold Remediation'],
-        'Thermostat Installation': ['Smart Thermostat Setup', 'Digital Thermostat Wiring', 'Calibration', 'Battery Replacement'],
-        'System Maintenance': ['Annual Tune-up', 'Coil Cleaning', 'Safety Inspection', 'Performance Testing']
-    }
-};
-
 const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export const ServicesManager = ({
@@ -57,7 +12,8 @@ export const ServicesManager = ({
     onEditService,
     onDeleteService,
     onSkipForLater,
-    onSubmit
+    onSubmit,
+    allServices = {}
 }) => {
     const [currentService, setCurrentService] = useState({
         category: '',
@@ -76,10 +32,10 @@ export const ServicesManager = ({
     const [editingId, setEditingId] = useState(null);
     const [currentDay, setCurrentDay] = useState(null);
 
-    const categories = Object.keys(fullCategoryData);
-    const subCategories = currentService.category ? Object.keys(fullCategoryData[currentService.category] || {}) : [];
+    const categories = Object.keys(allServices);
+    const subCategories = currentService.category ? Object.keys(allServices[currentService.category] || {}) : [];
     const serviceOptions = (currentService.category && currentService.subCategory)
-        ? (fullCategoryData[currentService.category]?.[currentService.subCategory] || [])
+        ? (allServices[currentService.category]?.[currentService.subCategory] || [])
         : [];
 
     const handleServiceChange = (e) => {

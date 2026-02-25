@@ -27,7 +27,9 @@ export default function ProviderRegister() {
         handleDeleteService,
         handleSkipForLater,
         handleSubmit,
-        syncWithIntegromat
+        syncWithIntegromat,
+        cities,
+        allServices
     } = useProviderRegister();
 
     return (
@@ -66,6 +68,7 @@ export default function ProviderRegister() {
                                 onChange={handleChange}
                                 onServiceAreaChange={handleServiceAreaChange}
                                 onNext={handleNext}
+                                cities={cities}
                             />
                         ) : (
                             <ServicesManager
@@ -75,6 +78,7 @@ export default function ProviderRegister() {
                                 onDeleteService={handleDeleteService}
                                 onSkipForLater={handleSkipForLater}
                                 onSubmit={handleSubmit}
+                                allServices={allServices}
                             />
                         )}
                     </motion.div>

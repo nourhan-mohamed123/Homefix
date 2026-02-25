@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { API_ENDPOINTS, apiCall } from '../config/api.js';
 
@@ -9,6 +9,8 @@ export const useProviderRegister = () => {
     const [isConfirmOpen, setIsConfirmOpen] = useState(false);
     const [registerError, setRegisterError] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [cities, setCities] = useState([]);
+    const [allServices, setAllServices] = useState({});
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -18,11 +20,27 @@ export const useProviderRegister = () => {
         confirmPassword: '',
         address: '',
         city: '',
-        discretion: '',
+        description: '',
         serviceAreas: [],
         idDocument: null,
         certifications: null
     });
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [citiesData, servicesData] = await Promise.all([
+                    apiCall(API_ENDPOINTS.CITIES),
+                    apiCall(API_ENDPOINTS.SERVICES)
+                ]);
+                setCities(citiesData.cities || citiesData || []);
+                setAllServices(servicesData.services || servicesData || {});
+            } catch (error) {
+                console.error('Error fetching registration data:', error);
+            }
+        };
+        fetchData();
+    }, []);
 
     const [selectedDays, setSelectedDays] = useState([]);
     const handleChange = (e) => {
@@ -114,9 +132,9 @@ export const useProviderRegister = () => {
                 email: formData.email,
                 password: formData.password,
                 contact_number: formData.phone,
-                cityOrCities: formData.city,
+                cityOrCities: [formData.city],
                 address: formData.address || null,
-                discription: formData.discretion,
+                discription: formData.description,
                 account_type: 'provider'
             };
             await apiCall(API_ENDPOINTS.AUTH.SIGNUP, {
@@ -141,6 +159,8 @@ export const useProviderRegister = () => {
         registerError,
         isSubmitting,
         selectedDays,
+        cities,
+        allServices,
 
         setActiveTab,
         setIsConfirmOpen,

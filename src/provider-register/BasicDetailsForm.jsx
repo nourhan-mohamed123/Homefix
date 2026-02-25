@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronDown, X } from 'lucide-react';
-export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }) => {
+export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext, cities = [] }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [errors, setErrors] = useState({});
 
-    const cities = [
-        "Cairo", "Giza", "Alexandria", "Shubra El Kheima", "Port Said", "Suez", "Luxor", "Mansoura",
-        "El-Mahalla El-Kubra", "Tanta", "Asyut", "Ismailia", "Fayyum", "Zagazig", "Aswan", "Damietta"
-    ];
     const handlePhoneChange = (e) => {
         const { value } = e.target;
         if (value && !/^\d+$/.test(value)) return;
@@ -114,13 +110,18 @@ export const BasicDetailsForm = ({ data, onChange, onServiceAreaChange, onNext }
                 </div>
                 <div className="flex flex-col gap-2">
                     <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">City :<span className="text-red-500">*</span></label>
-                    <input
+                    <select
                         name="city"
                         value={data.city}
                         onChange={onChange}
                         className="p-4 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-homefix-primary focus:border-transparent outline-none transition-all"
-                        placeholder="Enter your city"
-                    />
+                        required
+                    >
+                        <option value="">Select your city</option>
+                        {cities.map(city => (
+                            <option key={city} value={city}>{city}</option>
+                        ))}
+                    </select>
                 </div>
                 <div className="flex flex-col gap-2">
                     <label className="text-sm font-bold text-gray-700 uppercase tracking-wide">Password :<span className="text-red-500">*</span></label>

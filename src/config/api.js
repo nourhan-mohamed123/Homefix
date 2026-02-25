@@ -11,23 +11,25 @@ export const API_ENDPOINTS = {  AUTH: {
   },
   HEALTH: `${API_BASE_URL}/api/health`,
   CHK: `${API_BASE_URL}/chk`,
+  CITIES: `${API_BASE_URL}/cities`,
+  SERVICES: `${API_BASE_URL}/services`,
 };
 
 export const apiCall = async (url, options = {}) => {
   try {
     const response = await fetch(url, {
       ...options,
-      credentials: 'include', 
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true', 
+        'ngrok-skip-browser-warning': 'true',
         ...options.headers,
       },
     });
 
-    let data;
+    let body;
     try {
-      data = await response.json();
+      body = await response.json();
     } catch {
       if (!response.ok) {
         throw new Error(`Request failed: ${response.status} ${response.statusText}`);
@@ -35,11 +37,14 @@ export const apiCall = async (url, options = {}) => {
       throw new Error('Invalid JSON response from server');
     }
 
+    // API contract: { msg: 'Success', data: ... } on success
+    //               { msg: '<error message>' } on 4xx / 5xx
     if (!response.ok) {
-      throw new Error(data.msg || data.message || 'API request failed');
+      throw new Error(body.msg || `Request failed: ${response.status}`);
     }
 
-    return data;
+    // Return the inner `data` payload; callers don't need the envelope wrapper
+    return body.data !== undefined ? body.data : body;
   } catch (error) {
     console.error('API call error:', error);
     throw error;
