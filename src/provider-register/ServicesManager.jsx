@@ -82,8 +82,19 @@ export const ServicesManager = ({
             alert('Please fill in all required fields (Category, Service Name, Price)');
             return;
         }
+
+        const selectedCategory = categories.find(c => c.category_id === Number(currentService.category));
+        const selectedSubCategory = subCategories.find(sc => sc.sub_category_id === Number(currentService.subCategory));
+        const selectedService = serviceOptions.find(s => s.service_id === Number(currentService.serviceName));
+
         const serviceData = {
             ...currentService,
+            category_id: Number(currentService.category),
+            category_name: selectedCategory?.category_name || '',
+            sub_category_id: Number(currentService.subCategory),
+            sub_category_name: selectedSubCategory?.sub_category_name || '',
+            service_id: Number(currentService.serviceName),
+            service_name: selectedService?.service_name || '',
             id: editingId || Date.now(),
             commission: '10%'
         };
