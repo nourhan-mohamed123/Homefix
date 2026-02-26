@@ -35,7 +35,12 @@ const Login = () => {
         }),
       });
 
-      const user = { id: response.id, name: response.name, email: response.email, role: response.role };
+      const user = {
+        id: response.id,
+        username: response.username || response.firstName || response.email?.split('@')[0] || '',
+        email: response.email,
+        role: response.role,
+      };
       const storage = formData.rememberMe ? localStorage : sessionStorage;
       storage.setItem('user', JSON.stringify(user));
       if (response.role === 'provider') {

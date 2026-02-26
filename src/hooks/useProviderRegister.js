@@ -166,6 +166,63 @@ export const useProviderRegister = () => {
             setIsSubmitting(false);
         }
     };
+
+    /**
+     * subscribeToServices
+     * ─────────────────────────────────────────────────────────────
+     * بترسل كل service اختارها الـ provider للـ endpoint ده:
+     *   POST /provider/service/:service_id/subscribe
+     *
+     * الـ body المطلوب:
+     * {
+     *   name        : string              ← مطلوب: بيعمله validate الـ backend
+     *   price_type  : 'hourly' | 'fixed' | 'free'
+     *   price       : number
+     *   description : string | null
+     *   status      : 'Active' | 'inActive'
+     *   image       : string | null
+     *   slot        : Array               ← flat array شكله:
+     *                 [
+     *                   { day: 'Monday',  start_time: '09:00', end_time: '17:00' },
+     *                   { day: 'Friday',  start_time: '10:00', end_time: '14:00' },
+     *                 ]
+     * }
+     *
+     * ملاحظة على الـ slot:
+     *   الـ frontend بيخزن الـ slots بشكل nested:
+     *     days: [{ day, slots: [{ start_time, end_time }] }]
+     *   الـ backend (stored procedure) يحتاج flat array:
+     *     [{ day, start_time, end_time }]
+     *   الـ flatMap هنا بيعمل التحويل ده.
+     */
+    const subscribeToServices = async () => {
+        for (const service of services) {
+            // تحويل nested slots → flat array
+            const flatSlots = (service.days || []).flatMap(dayObj =>
+                (dayObj.slots || []).map(slot => ({
+                    day:        dayObj.day,
+                    start_time: slot.start_time,
+                    end_time:   slot.end_time,
+                }))
+            );
+
+            const servicePayload = {
+                name:        service.serviceName,   // required by backend validation
+                price_type:  service.priceType,     // 'hourly' | 'fixed' | 'free'
+                price:       service.price,
+                description: service.description || null,
+                status:      'Active',
+                image:       null,
+                slot:        flatSlots,
+            };
+
+            await apiCall(API_ENDPOINTS.PROVIDER_SERVICES(service.serviceName), {
+                method: 'POST',
+                body: JSON.stringify(servicePayload),
+            });
+        }
+    };
+
     return {
         formData,
         services,
@@ -191,6 +248,7 @@ export const useProviderRegister = () => {
         handleDeleteService,
         handleSkipForLater,
         handleSubmit,
-        syncWithIntegromat
+        syncWithIntegromat,
+        subscribeToServices
     };
 };
