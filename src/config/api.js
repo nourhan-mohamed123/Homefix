@@ -13,6 +13,11 @@ export const API_ENDPOINTS = {  AUTH: {
   CHK: `${API_BASE_URL}/chk`,
   CITIES: `${API_BASE_URL}/city`,
   SERVICES: `${API_BASE_URL}/service`,
+  CATEGORIES: `${API_BASE_URL}/category`,
+
+  // ⏳ Pending backend confirmation — set to null until endpoint is ready
+  REVIEWS: null,                // GET /reviews → { customer_name, service_name, rating, comment, avatar_url }
+  FEATURED_SERVICES: null,      // GET /featured-services (or derive from /category?)
 };
 
 export const apiCall = async (url, options = {}) => {

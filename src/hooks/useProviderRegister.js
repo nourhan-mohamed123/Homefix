@@ -33,20 +33,6 @@ export const useProviderRegister = () => {
                     apiCall(API_ENDPOINTS.CITIES),
                     apiCall(API_ENDPOINTS.SERVICES)
                 ]);
-                //serviceData is like this
-                //{
-                //     "service_id": 1,
-                //     "service_name": "Deep House Cleaning",
-                //     "sub_category_id": 1,
-                //     "sub_category_name": "Cleaning",
-                //     "category_name": "Home Services",
-                //     "category_id": 1,
-                //     "commission_type": "percentage",
-                //     "commission_value": "10.00",
-                //     "status": "active",
-                //     "discount": "5.00",
-                //     "pricing": null
-                // },
                 citiesData = citiesData.map(city => city.name);
                 setCities(citiesData.cities || citiesData || []);
                 setAllServices(servicesData.services || servicesData || {});
@@ -166,35 +152,6 @@ export const useProviderRegister = () => {
             setIsSubmitting(false);
         }
     };
-
-    /**
-     * subscribeToServices
-     * ─────────────────────────────────────────────────────────────
-     * بترسل كل service اختارها الـ provider للـ endpoint ده:
-     *   POST /provider/service/:service_id/subscribe
-     *
-     * الـ body المطلوب:
-     * {
-     *   name        : string              ← مطلوب: بيعمله validate الـ backend
-     *   price_type  : 'hourly' | 'fixed' | 'free'
-     *   price       : number
-     *   description : string | null
-     *   status      : 'Active' | 'inActive'
-     *   image       : string | null
-     *   slot        : Array               ← flat array شكله:
-     *                 [
-     *                   { day: 'Monday',  start_time: '09:00', end_time: '17:00' },
-     *                   { day: 'Friday',  start_time: '10:00', end_time: '14:00' },
-     *                 ]
-     * }
-     *
-     * ملاحظة على الـ slot:
-     *   الـ frontend بيخزن الـ slots بشكل nested:
-     *     days: [{ day, slots: [{ start_time, end_time }] }]
-     *   الـ backend (stored procedure) يحتاج flat array:
-     *     [{ day, start_time, end_time }]
-     *   الـ flatMap هنا بيعمل التحويل ده.
-     */
     const subscribeToServices = async () => {
         for (const service of services) {
             // تحويل nested slots → flat array
