@@ -1,10 +1,11 @@
 
 export const API_BASE_URL = 'https://nonexponential-repulsively-kip.ngrok-free.dev';
 
-export const API_ENDPOINTS = {  AUTH: {
+export const API_ENDPOINTS = {
+  AUTH: {
     LOGIN: `${API_BASE_URL}/auth/login`,
     SIGNUP: `${API_BASE_URL}/auth/signup`,
-    REGISTER: `${API_BASE_URL}/auth/signup`, 
+    REGISTER: `${API_BASE_URL}/auth/signup`,
     REGISTER_PROVIDER: `${API_BASE_URL}/auth/signup`,
     LOGOUT: `${API_BASE_URL}/auth/logout`,
     VERIFY: `${API_BASE_URL}/api/auth/verify`,
@@ -20,7 +21,7 @@ export const API_ENDPOINTS = {  AUTH: {
   FEATURED_SERVICES: null,      // GET /featured-services (or derive from /category?)
 };
 
-export const apiCall = async (url, options = {}) => {
+export const apiCall = async (url, options = { method: "GET" }) => {
   try {
     const response = await fetch(url, {
       ...options,
