@@ -59,15 +59,10 @@ export default function PopularServices({ categories = [], loading = false }) {
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
                     <div className="space-y-2">
-                        <div className="flex items-center gap-2">
-                            <span className="w-8 h-[2px] bg-homefix-primary"></span>
-                            <span className="text-homefix-primary text-xs font-bold uppercase tracking-[0.2em]">Our Experts</span>
-                        </div>
                         <h2 className="text-homefix-text text-3xl md:text-5xl font-black tracking-tight">
                             Popular <span className="text-homefix-primary">Services</span>
                         </h2>
                     </div>
-                    
                     <button className="group flex items-center gap-2 px-6 py-3 bg-gray-50 text-homefix-text rounded-2xl font-bold text-sm hover:bg-homefix-primary hover:text-white transition-all duration-300">
                         View All Services 
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
