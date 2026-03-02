@@ -15,6 +15,7 @@ export const API_ENDPOINTS = {
   CITIES: `${API_BASE_URL}/city`,
   SERVICES: `${API_BASE_URL}/service`,
   CATEGORIES: `${API_BASE_URL}/category`,
+  
 
   // ⏳ Pending backend confirmation — set to null until endpoint is ready
   REVIEWS: null,                // GET /reviews → { customer_name, service_name, rating, comment, avatar_url }

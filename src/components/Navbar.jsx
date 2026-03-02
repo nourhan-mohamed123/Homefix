@@ -57,20 +57,22 @@ const UserMenu = ({ user, onLogout }) => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
-    const displayName = user.username || user.email || '?';
-    const initial = displayName[0].toUpperCase();
+    const displayName = user.name || user.username || user.email || "Guest";
+    const initial = displayName.charAt(0).toUpperCase();
 
     return (
         <div className="relative inline-block text-left" ref={menuRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-2 px-4 py-2 rounded-xl bg-homefix-primary text-white text-sm font-bold shadow-md hover:bg-opacity-90 transition-all duration-300"
+                className="flex items-center gap-2 bg-[#2E4699] text-white px-3 py-1.5 rounded-full hover:bg-opacity-90 transition-all duration-300 shadow-md"
             >
-                <span className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center font-black text-sm">
+                <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center text-xs font-bold">
                     {initial}
+                </div>
+                <span className="text-sm font-medium hidden sm:inline max-w-[120px] truncate">
+                    {displayName}
                 </span>
-                <span className="hidden sm:inline max-w-[120px] truncate">{displayName}</span>
-                <ChevronDown size={14} className={`transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {isOpen && (

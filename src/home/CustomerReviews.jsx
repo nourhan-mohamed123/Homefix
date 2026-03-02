@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Star, Loader2, ShieldCheck } from 'lucide-react';
 import { apiCall, API_ENDPOINTS } from '../config/api.js';
 
-// ─── Fallback data (shown until Reviews API is ready) ─────────────────────────
 const FALLBACK_REVIEWS = [
     {
         id: 1,
@@ -30,12 +29,10 @@ const FALLBACK_REVIEWS = [
     },
 ];
 
-// ─── Single Review Card ────────────────────────────────────────────────────────
 function ReviewCard({ review }) {
     const rating = Number(review.rating) || 5;
     return (
         <div className="group bg-white rounded-[2rem] p-8 border border-gray-100 shadow-[0_8px_30px_rgba(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(30,58,138,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col">
-            {/* Stars */}
             <div className="flex gap-1 mb-5">
                 {[...Array(5)].map((_, i) => (
                     <Star
@@ -44,13 +41,9 @@ function ReviewCard({ review }) {
                     />
                 ))}
             </div>
-
-            {/* Comment */}
             <p className="text-homefix-text/70 text-sm leading-relaxed flex-1 mb-8 font-medium">
                 &ldquo;{review.comment}&rdquo;
             </p>
-
-            {/* Avatar + Name */}
             <div className="flex items-center gap-4 border-t border-gray-100 pt-6">
                 <img
                     src={review.avatar_url || `https://i.pravatar.cc/150?u=${review.id}`}
@@ -66,15 +59,12 @@ function ReviewCard({ review }) {
         </div>
     );
 }
-
-// ─── Main Section ──────────────────────────────────────────────────────────────
 export default function CustomerReviews() {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [usingFallback, setUsingFallback] = useState(false);
 
     useEffect(() => {
-        // ⏳ Will fetch live once API_ENDPOINTS.REVIEWS is available on the backend
         if (!API_ENDPOINTS.REVIEWS) {
             setReviews(FALLBACK_REVIEWS);
             setUsingFallback(true);
@@ -106,8 +96,6 @@ export default function CustomerReviews() {
         fetchReviews();
         return () => controller.abort();
     }, []);
-
-    // Average rating from current data
     const avgRating = reviews.length
         ? (reviews.reduce((sum, r) => sum + Number(r.rating || 5), 0) / reviews.length).toFixed(1)
         : '4.9';
@@ -129,16 +117,12 @@ export default function CustomerReviews() {
                     Join thousands of satisfied homeowners who trust HomeFix for their daily needs.
                 </p>
             </div>
-
-            {/* Loading */}
             {loading && (
                 <div className="flex flex-col items-center justify-center py-20 gap-4">
                     <Loader2 className="w-10 h-10 text-homefix-accent animate-spin" />
                     <p className="text-gray-400 text-sm font-medium">Loading reviews...</p>
                 </div>
             )}
-
-            {/* Cards grid */}
             {!loading && (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                     {reviews.map((review) => (
@@ -146,8 +130,6 @@ export default function CustomerReviews() {
                     ))}
                 </div>
             )}
-
-            {/* Verified badge */}
             <div className="mt-14 flex justify-center">
                 <div className="inline-flex items-center gap-2.5 bg-white border border-gray-100 px-6 py-3 rounded-2xl shadow-sm">
                     <ShieldCheck className="w-5 h-5 text-homefix-primary" />

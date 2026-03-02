@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trash2, Plus, Clock } from 'lucide-react';
-
 export default function TimeSlotsModal({ isOpen, day, existingSlots, onClose, onSave }) {
     const [timeSlots, setTimeSlots] = useState([]);
-
     useEffect(() => {
         if (isOpen) {
             if (existingSlots && existingSlots.length > 0) {
@@ -18,7 +16,6 @@ export default function TimeSlotsModal({ isOpen, day, existingSlots, onClose, on
     const handleAddSlot = () => {
         setTimeSlots([...timeSlots, { from: '09:00', to: '17:00' }]);
     };
-
     const handleRemoveSlot = (index) => {
         setTimeSlots(timeSlots.filter((_, i) => i !== index));
     };
@@ -28,11 +25,9 @@ export default function TimeSlotsModal({ isOpen, day, existingSlots, onClose, on
         newSlots[index][field] = value;
         setTimeSlots(newSlots);
     };
-
     const handleSave = () => {
         onSave(day, timeSlots);
     };
-
     return (
         <AnimatePresence>
             {isOpen && (
@@ -104,7 +99,6 @@ export default function TimeSlotsModal({ isOpen, day, existingSlots, onClose, on
                                                 className="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg focus:ring-2 focus:ring-homefix-accent/20 focus:border-homefix-accent outline-none transition-all text-slate-700 font-medium"
                                             />
                                         </div>
-
                                         {timeSlots.length > 1 && (
                                             <button
                                                 type="button"

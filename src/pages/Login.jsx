@@ -37,7 +37,8 @@ const Login = () => {
 
       const user = {
         id: response.id,
-        username: response.username || response.firstName || response.email?.split('@')[0] || '',
+        name: response.name || response.firstName || response.firstname || response.username || '',
+        username: response.username || response.firstName || response.firstname || response.email?.split('@')[0] || '',
         email: response.email,
         role: response.role,
       };

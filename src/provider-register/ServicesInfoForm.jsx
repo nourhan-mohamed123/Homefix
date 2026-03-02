@@ -7,8 +7,8 @@ import TimeSlotsModal from './TimeSlotsModal';
 export default function ServicesInfoForm({
     categories = [],
     subCategories = [],
-    allServices = [], // الـ services اللي جاية من الـ API
-    services,         // الـ services اللي اليوزر ضافها فعلياً
+    allServices = [],
+    services,
     onAddService,
     onEditService,
     onDeleteService,
@@ -23,12 +23,10 @@ export default function ServicesInfoForm({
         days: []
     });
 
-    // 1. فلترة الـ Sub-categories بناءً على الكاتيجوري المختار
     const filteredSubCategories = subCategories.filter(
         sub => String(sub.category_id) === String(currentService.category)
     );
 
-    // 2. فلترة الـ Services بناءً على الساب-كاتيجوري المختار
     const filteredServices = allServices.filter(
         svc => String(svc.sub_category_id) === String(currentService.subCategory)
     );
@@ -38,7 +36,6 @@ export default function ServicesInfoForm({
         setCurrentService(prev => ({
             ...prev,
             [name]: value,
-            // تصغير الـ logic: لو غير الكاتيجوري يصفر اللي تحته
             ...(name === 'category' && { subCategory: '', serviceName: '' }),
             ...(name === 'subCategory' && { serviceName: '' })
         }));
@@ -47,7 +44,6 @@ export default function ServicesInfoForm({
     return (
         <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Category Select */}
                 <div className="space-y-2">
                     <label className="text-xs font-bold uppercase text-gray-500">Category</label>
                     <select name="category" value={currentService.category} onChange={handleServiceChange} className="w-full p-4 rounded-2xl bg-gray-50 border border-gray-200">
@@ -57,8 +53,6 @@ export default function ServicesInfoForm({
                         ))}
                     </select>
                 </div>
-
-                {/* Sub-Category Select */}
                 <div className="space-y-2">
                     <label className="text-xs font-bold uppercase text-gray-500">Sub-Category</label>
                     <select name="subCategory" value={currentService.subCategory} onChange={handleServiceChange} disabled={!currentService.category} className="w-full p-4 rounded-2xl bg-gray-50 border border-gray-200">
@@ -69,8 +63,6 @@ export default function ServicesInfoForm({
                     </select>
                 </div>
             </div>
-
-            {/* باقي الفورم والـ ServiceCards */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {services.map(service => (
                     <ServiceCard

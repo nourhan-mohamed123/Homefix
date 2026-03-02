@@ -1,46 +1,51 @@
 import React from 'react';
-import { ArrowRight, Star, Loader2, Wrench } from 'lucide-react';
+import { ArrowRight, Star, Loader2, Wrench, ChevronRight } from 'lucide-react';
 import { API_BASE_URL } from '../config/api.js';
+
 const getFullImageUrl = (imagePath) => {
     if (!imagePath) return 'https://placehold.co/600x400?text=HomeFix';
     if (imagePath.startsWith('http')) return imagePath;
     return `${API_BASE_URL}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;
 };
-
 function ServiceCard({ service }) {
-    const tintBg = service.color ? `${service.color}20` : '#F1F5F920';
-
     return (
-        <div className="bg-white rounded-[1.5rem] overflow-hidden border border-gray-100 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col font-['Poppins']">
-            <div className="relative h-40 overflow-hidden bg-gray-50">
+        <div className="group bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-gray-200/40 transition-all duration-500 flex flex-col font-['Poppins']">
+            <div className="relative h-48 overflow-hidden bg-gray-100">
                 <img
                     src={getFullImageUrl(service.image)}
                     alt={service.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     onError={(e) => { e.target.src = 'https://placehold.co/600x400?text=Service'; }}
                 />
-                <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full flex items-center gap-1 shadow-sm">
-                    <Star className="w-3 h-3 text-yellow-500 fill-yellow-500" />
-                    <span className="text-[10px] font-bold text-homefix-text">{service.rating || '4.9'}</span>
+                <div className="absolute top-4 left-4 z-10 bg-white/80 backdrop-blur-md px-3 py-1.5 rounded-2xl flex items-center gap-1.5 shadow-sm border border-white/20">
+                    <Star className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
+                    <span className="text-[11px] font-extrabold text-homefix-text">{service.rating || '4.9'}</span>
                 </div>
+                <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors duration-300" />
             </div>
-            <div className="p-5 flex flex-col flex-1">
-                <h3 className="text-lg font-black text-homefix-text mb-1 truncate">
-                    {service.name}
-                </h3>
-                <p className="text-gray-400 text-xs line-clamp-2 mb-4">
-                    {service.description || 'Professional service by verified experts.'}
-                </p>
-
-                <div className="pt-4 border-t border-gray-50 flex items-center justify-between">
-                    <div>
-                        <p className="text-[9px] text-gray-400 uppercase font-bold">Starting</p>
-                        <span className="text-homefix-primary text-base font-black">
-                            {service.price || service.starting_price || '$50'}
-                        </span>
+            <div className="p-6 flex flex-col flex-1">
+                <div className="flex-1">
+                    <h3 className="text-xl font-black text-homefix-text mb-2 group-hover:text-homefix-primary transition-colors line-clamp-1">
+                        {service.name}
+                    </h3>
+                    <p className="text-gray-400 text-sm leading-relaxed line-clamp-2 mb-6 font-medium">
+                        {service.description || 'Professional service by verified experts.'}
+                    </p>
+                </div>
+                <div className="flex items-center justify-between pt-4 border-t border-gray-50">
+                    <div className="flex flex-col">
+                        <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-0.5">Starting From</span>
+                        <div className="flex items-baseline gap-1">
+                            <span className="text-xs font-bold text-homefix-primary">EGP</span>
+                            <span className="text-2xl font-black text-homefix-text leading-none">
+                                {service.price || service.starting_price || '00'}
+                            </span>
+                        </div>
                     </div>
-                    <button className="bg-homefix-primary text-white px-4 py-2 rounded-lg font-bold text-[10px] uppercase tracking-wider hover:bg-homefix-accent transition-colors">
-                        Book
+
+                    <button className="relative overflow-hidden bg-homefix-primary text-white p-3 rounded-2xl font-bold transition-all duration-300 hover:bg-homefix-text hover:pr-8 group/btn">
+                        <span className="text-xs uppercase tracking-wider relative z-10">Book Now</span>
+                        <ChevronRight className="absolute right-2 top-1/2 -translate-y-1/2 w-4 h-4 opacity-0 group-hover/btn:opacity-100 transition-all duration-300" />
                     </button>
                 </div>
             </div>
@@ -50,29 +55,40 @@ function ServiceCard({ service }) {
 
 export default function PopularServices({ categories = [], loading = false }) {
     return (
-        <section id="services" className="bg-homefix-bg px-6 py-16 md:px-12 lg:px-20 font-['Poppins']">
+        <section id="services" className="bg-white px-6 py-20 md:px-12 lg:px-20 font-['Poppins']">
             <div className="max-w-7xl mx-auto">
-                <div className="flex items-end justify-between mb-10">
-                    <h2 className="text-homefix-text text-2xl md:text-4xl font-black">
-                        Popular <span className="text-homefix-primary">Services</span>
-                    </h2>
-                    <button className="text-homefix-accent font-bold text-xs flex items-center gap-1 hover:gap-2 transition-all">
-                        View all <ArrowRight className="w-3 h-3" />
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+                    <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                            <span className="w-8 h-[2px] bg-homefix-primary"></span>
+                            <span className="text-homefix-primary text-xs font-bold uppercase tracking-[0.2em]">Our Experts</span>
+                        </div>
+                        <h2 className="text-homefix-text text-3xl md:text-5xl font-black tracking-tight">
+                            Popular <span className="text-homefix-primary">Services</span>
+                        </h2>
+                    </div>
+                    
+                    <button className="group flex items-center gap-2 px-6 py-3 bg-gray-50 text-homefix-text rounded-2xl font-bold text-sm hover:bg-homefix-primary hover:text-white transition-all duration-300">
+                        View All Services 
+                        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </button>
                 </div>
-
                 {loading ? (
-                    <div className="flex flex-col items-center py-20 gap-3">
-                        <Loader2 className="w-8 h-8 text-homefix-accent animate-spin" />
-                        <p className="text-gray-400 text-xs">Loading services...</p>
+                    <div className="flex flex-col items-center py-32 gap-4">
+                        <div className="relative">
+                            <Loader2 className="w-12 h-12 text-homefix-primary animate-spin" />
+                            <div className="absolute inset-0 bg-homefix-primary/10 blur-xl rounded-full"></div>
+                        </div>
+                        <p className="text-gray-500 font-medium animate-pulse">Fetching premium services...</p>
                     </div>
                 ) : categories.length === 0 ? (
-                    <div className="text-center py-20 text-gray-400">
-                        <Wrench className="w-10 h-10 mx-auto mb-3 opacity-20" />
-                        <p className="text-sm font-medium">No services found.</p>
+                    <div className="text-center py-32 rounded-[3rem] bg-gray-50/50 border border-dashed border-gray-200">
+                        <Wrench className="w-16 h-16 mx-auto mb-4 text-gray-200" />
+                        <p className="text-gray-500 font-semibold text-lg">No services available right now.</p>
+                        <p className="text-gray-400 text-sm">Please check back later or refresh the page.</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                         {categories.map((cat) => (
                             <ServiceCard key={cat.category_id || cat.id} service={cat} />
                         ))}

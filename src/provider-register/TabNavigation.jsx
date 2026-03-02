@@ -1,12 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-
 export default function TabNavigation({ activeTab, setActiveTab }) {
     const tabs = [
         { id: 'basic', label: 'Basic Provider Information' },
         { id: 'services', label: 'Services Information' }
     ];
-
     return (
         <div className="bg-white border-b border-slate-100 flex w-full relative" dir="ltr">
             {tabs.map((tab) => {
