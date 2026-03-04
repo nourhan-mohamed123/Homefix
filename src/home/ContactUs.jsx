@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-
+import { apiCall, API_ENDPOINTS } from '../config/api.js';
 export default function ContactUs() {
     return (
         <section id="contactus" className="px-6 py-16 md:px-20 lg:px-40 font-['Poppins']">
@@ -36,8 +36,6 @@ export default function ContactUs() {
                             Become a Pro
                         </Link>
                     </div>
-
-                    {/* Trust line */}
                     <p className="text-white/40 text-xs font-medium mt-8">
                         No credit card required &nbsp;·&nbsp; Cancel anytime &nbsp;·&nbsp; Verified professionals
                     </p>

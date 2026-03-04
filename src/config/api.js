@@ -15,7 +15,12 @@ export const API_ENDPOINTS = {
   CITIES: `${API_BASE_URL}/city`,
   SERVICES: `${API_BASE_URL}/service`,
   CATEGORIES: `${API_BASE_URL}/category`,
+  PROVIDERS: `${API_BASE_URL}/provider`, // Placeholder for future use
   
+
+  // 🔗 Make.com Webhook — Dynamic hero slider data from Google Sheets
+  // Replace YOUR_WEBHOOK_ID_HERE with your actual Make.com webhook ID
+  MAKE_WEBHOOK: 'https://hook.us1.make.com/YOUR_WEBHOOK_ID_HERE',
 
   // ⏳ Pending backend confirmation — set to null until endpoint is ready
   REVIEWS: null,                // GET /reviews → { customer_name, service_name, rating, comment, avatar_url }

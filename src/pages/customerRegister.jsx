@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { API_ENDPOINTS, apiCall } from '../config/api';
-
 const CustomerRegister = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({

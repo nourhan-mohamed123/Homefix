@@ -116,10 +116,11 @@ const Navbar = () => {
     };
 
     const navLinks = [
-        { name: 'Home', href: '/#home' },
-        { name: 'Category', href: '/#services' },
-        { name: 'Services', href: '/#services' },
-        { name: 'Contact us', href: '/#contactus' },
+        { name: 'Home', href: '/', type: 'link' },
+        { name: 'Categories', href: '/categories', type: 'link' },
+        { name: 'Services', href: '/services', type: 'link' },
+        { name: 'Providers', href: '/providers', type: 'link' },
+        { name: 'Contact us', href: '/#contactus', type: 'anchor' },
     ];
     return (
         <header className="sticky top-0 z-50 flex items-center justify-between border-b border-homefix-secondary bg-white/90 backdrop-blur-md px-6 py-4 md:px-20 lg:px-40">
@@ -139,13 +140,23 @@ const Navbar = () => {
             </div>
             <nav className="hidden lg:flex flex-1 justify-center gap-10">
                 {navLinks.map((link) => (
-                    <a
-                        key={link.name}
-                        href={link.href}
-                        className="text-homefix-text/70 hover:text-homefix-primary text-sm font-semibold transition-all duration-300 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-homefix-accent after:transition-all hover:after:w-full"
-                    >
-                        {link.name}
-                    </a>
+                    link.type === 'link' ? (
+                        <Link
+                            key={link.name}
+                            to={link.href}
+                            className="text-homefix-text/70 hover:text-homefix-primary text-sm font-semibold transition-all duration-300 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-homefix-accent after:transition-all hover:after:w-full"
+                        >
+                            {link.name}
+                        </Link>
+                    ) : (
+                        <a
+                            key={link.name}
+                            href={link.href}
+                            className="text-homefix-text/70 hover:text-homefix-primary text-sm font-semibold transition-all duration-300 relative after:content-[''] after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-[2px] after:bg-homefix-accent after:transition-all hover:after:w-full"
+                        >
+                            {link.name}
+                        </a>
+                    )
                 ))}
             </nav>
 

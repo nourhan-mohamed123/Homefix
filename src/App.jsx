@@ -7,9 +7,9 @@ import Login from './pages/Login'
 import Register from './pages/Login'
 import CustomerRegister from './pages/customerRegister'
 import ProviderRegister from './pages/ProviderRegister'
-import ProviderDashboard from './pages/ProviderDashboard'
-
-
+import Categories from './pages/Categories'
+import Services from './pages/Services'
+import Providers from './pages/Providers'
 const LayoutWrapper = ({ children }) => {
     const location = useLocation();
     const hideLayout = ['/login', '/register', '/customer-register', '/provider-register'].includes(location.pathname);
@@ -33,7 +33,9 @@ function App() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/customer-register" element={<CustomerRegister />} />
                     <Route path="/provider-register" element={<ProviderRegister />} />
-                    <Route path="/provider-dashboard" element={<ProviderDashboard />} />
+                    <Route path="/categories" element={<Categories />} />
+                    <Route path="/services" element={<Services />} />
+                    <Route path="/providers" element={<Providers />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </LayoutWrapper>
