@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams, Link } from 'react-router-dom';
+import PageHero from '../components/PageHero';
 import {
     Star, Wrench, ChevronRight,
-    X, ChevronDown, Search,
-    ArrowRight, Filter, SortAsc, TrendingUp, Award,
+    X, Search,
+    SortAsc, TrendingUp, Award,
     Sparkles, Tag
 }
     from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { apiCall, API_ENDPOINTS, API_BASE_URL } from '../config/api.js';
-import PageHero from '../components/PageHero';
 const SORT_OPTIONS = [
     { value: 'default', label: 'Default', icon: SortAsc },
     { value: 'price_asc', label: 'Price: Low to High', icon: TrendingUp },
@@ -193,8 +193,7 @@ export default function ServicesPage() {
     const [search, setSearch] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(initialCategory);
     const [sortBy, setSortBy] = useState('default');
-    const [showFilters, setShowFilters] = useState(false);
-    const [sortOpen, setSortOpen] = useState(false);
+
     useEffect(() => {
         (async () => {
             try {
@@ -244,225 +243,196 @@ export default function ServicesPage() {
     }, [services, selectedCategory, search, sortBy]);
 
     const activeFiltersCount = (selectedCategory !== 'all' ? 1 : 0) + (sortBy !== 'default' ? 1 : 0);
-    const SelectedSort = SORT_OPTIONS.find(o => o.value === sortBy) || SORT_OPTIONS[0];
     const resetAll = () => { setSearch(''); setSelectedCategory('all'); setSortBy('default'); };
     return (
         <div className="min-h-screen bg-homefix-bg font-['Poppins']">
             <ServicesBanner services={services.slice(0, 4)} />
+
+            {/* ── Sticky search bar ── */}
             <div className="sticky top-[73px] z-50 bg-white/90 backdrop-blur-3xl border-b border-gray-100 shadow-sm">
-                <div className="max-w-7xl mx-auto px-6 md:px-12 py-5 flex flex-wrap items-center gap-4">
-                    <div className="relative group flex-1 min-w-[280px]">
+                <div className="max-w-7xl mx-auto px-6 md:px-12 py-5 flex items-center gap-4">
+                    <div className="relative group flex-1">
                         <div className="absolute inset-y-0 left-5 flex items-center pointer-events-none">
                             <Search className="w-5 h-5 text-slate-400 group-focus-within:text-homefix-primary transition-colors" />
                         </div>
-                        <input type="text" value={search} onChange={e => setSearch(e.target.value)}
+                        <input
+                            type="text" value={search} onChange={e => setSearch(e.target.value)}
                             placeholder="What do you need help with?"
-                            className="w-full bg-slate-50 border border-slate-100 rounded-[1.25rem] pl-14 pr-28 py-4 text-sm
+                            className="w-full bg-slate-50 border border-slate-100 rounded-[1.25rem] pl-14 pr-24 py-4 text-sm
                                 font-bold text-homefix-text placeholder:text-slate-400
                                 focus:ring-2 focus:ring-homefix-primary/20 focus:border-homefix-primary/20
-                                focus:bg-white transition-all" />
+                                focus:bg-white transition-all"
+                        />
                         {!loading && (
                             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
                                 {search && (
-                                    <button onClick={() => setSearch('')}
-                                        className="text-slate-300 hover:text-slate-500 transition-colors">
+                                    <button onClick={() => setSearch('')} className="text-slate-300 hover:text-slate-500 transition-colors">
                                         <X className="w-4 h-4" />
                                     </button>
                                 )}
-                                <span className="text-[11px] font-black text-slate-300 tabular-nums">
-                                    {filtered.length}
-                                </span>
+                                <span className="text-[11px] font-black text-slate-300 tabular-nums">{filtered.length}</span>
                             </div>
                         )}
                     </div>
-                    <div className="flex items-center gap-3">
-                        <button onClick={() => setShowFilters(!showFilters)}
-                            className={`h-14 px-6 rounded-[1.25rem] flex items-center gap-3 text-sm font-black transition-all duration-300
-                                ${showFilters || activeFiltersCount > 0
-                                    ? 'bg-homefix-primary text-white shadow-lg shadow-homefix-primary/20'
-                                    : 'bg-white text-homefix-text border border-slate-200 hover:border-homefix-primary hover:text-homefix-primary'
-                                }`}>
-                            <Filter className="w-4 h-4" />
-                            Categories
-                            {activeFiltersCount > 0 && (
-                                <span className="bg-homefix-accent text-white text-[10px] min-w-[20px] h-5
-                                    rounded-full px-1 flex items-center justify-center font-black">
-                                    {activeFiltersCount}
-                                </span>
-                            )}
+                    {activeFiltersCount > 0 && (
+                        <button onClick={resetAll}
+                            className="flex items-center gap-2 text-xs font-black text-rose-500 hover:text-rose-700 transition-colors uppercase tracking-widest whitespace-nowrap">
+                            <X className="w-4 h-4" />
+                            Reset
                         </button>
-                        <div className="relative">
-                            <button onClick={() => setSortOpen(!sortOpen)}
-                                className="h-14 px-6 rounded-[1.25rem] bg-white border border-slate-200
-                                    flex items-center gap-3 text-sm font-bold text-homefix-text
-                                    hover:border-homefix-primary hover:text-homefix-primary transition-all">
-                                <SelectedSort.icon className="w-4 h-4" />
-                                <span className="hidden sm:inline">{SelectedSort.label}</span>
-                                <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${sortOpen ? 'rotate-180' : ''}`} />
-                            </button>
-                            <AnimatePresence>
-                                {sortOpen && (
-                                    <>
-                                        <div className="fixed inset-0 z-10" onClick={() => setSortOpen(false)} />
-                                        <motion.div
-                                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                                            className="absolute right-0 mt-3 w-64 bg-white border border-slate-100
-                                                rounded-3xl shadow-2xl z-20 overflow-hidden p-2">
-                                            {SORT_OPTIONS.map(opt => (
-                                                <button key={opt.value}
-                                                    onClick={() => { setSortBy(opt.value); setSortOpen(false); }}
-                                                    className={`w-full text-left px-5 py-4 rounded-2xl text-sm font-bold
-                                                        transition-all flex items-center justify-between
-                                                        ${sortBy === opt.value
-                                                            ? 'bg-homefix-primary/8 text-homefix-primary'
-                                                            : 'text-homefix-text hover:bg-slate-50'}`}>
-                                                    {opt.label}
-                                                    {sortBy === opt.value && <div className="w-2 h-2 rounded-full bg-homefix-primary" />}
-                                                </button>
-                                            ))}
-                                        </motion.div>
-                                    </>
-                                )}
-                            </AnimatePresence>
+                    )}
+                </div>
+            </div>
+
+            {/* ── Sidebar + Grid layout ── */}
+            <div className="max-w-7xl mx-auto px-6 md:px-12 py-12">
+                <div className="flex gap-8 items-start">
+
+                    {/* ── LEFT SIDEBAR ── */}
+                    <aside className="w-64 flex-shrink-0 sticky top-[145px] self-start space-y-6">
+
+                        {/* Sort */}
+                        <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
+                            <div className="px-6 pt-5 pb-3">
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Sort By</p>
+                            </div>
+                            <div className="px-3 pb-3 space-y-1">
+                                {SORT_OPTIONS.map(opt => (
+                                    <button key={opt.value}
+                                        onClick={() => setSortBy(opt.value)}
+                                        className={`w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-between
+                                            ${sortBy === opt.value
+                                                ? 'bg-homefix-primary text-white shadow-md'
+                                                : 'text-homefix-text hover:bg-slate-50'}`}>
+                                        <span>{opt.label}</span>
+                                        {sortBy === opt.value && <div className="w-2 h-2 rounded-full bg-white/60" />}
+                                    </button>
+                                ))}
+                            </div>
                         </div>
 
-                    </div>
-                </div>
-                <AnimatePresence>
-                    {showFilters && (
-                        <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: 'auto', opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            className="overflow-hidden bg-slate-50 border-t border-slate-100">
-                            <div className="max-w-7xl mx-auto px-6 md:px-12 py-6">
-                                <div className="flex flex-wrap gap-3">
-                                    <button onClick={() => setSelectedCategory('all')}
-                                        className={`px-6 py-3 rounded-[1.25rem] text-sm font-black transition-all
-                                            ${selectedCategory === 'all'
-                                                ? 'bg-homefix-primary text-white shadow-premium'
-                                                : 'bg-white text-homefix-text border border-slate-200 hover:border-homefix-primary hover:text-homefix-primary'
-                                            }`}>
-                                        All Services
-                                    </button>
-                                    {categories.map(cat => {
-                                        const catId = String(cat.category_id || cat.id);
-                                        const isActive = selectedCategory === catId;
-                                        return (
-                                            <button key={catId}
-                                                onClick={() => setSelectedCategory(isActive ? 'all' : catId)}
-                                                className={`px-6 py-3 rounded-[1.25rem] text-sm font-black transition-all
-                                                    ${isActive
-                                                        ? 'bg-homefix-primary text-white shadow-premium'
-                                                        : 'bg-white text-homefix-text border border-slate-200 hover:border-homefix-primary hover:text-homefix-primary'
-                                                    }`}>
-                                                {cat.category_name || cat.name}
-                                            </button>
-                                        );
-                                    })}
+                        {/* Categories */}
+                        <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
+                            <div className="px-6 pt-5 pb-3">
+                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Category</p>
+                            </div>
+                            <div className="px-3 pb-3 space-y-1">
+                                <button
+                                    onClick={() => setSelectedCategory('all')}
+                                    className={`w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-between
+                                        ${selectedCategory === 'all'
+                                            ? 'bg-homefix-primary text-white shadow-md'
+                                            : 'text-homefix-text hover:bg-slate-50'}`}>
+                                    <span>All Services</span>
+                                </button>
+                                {categories.map(cat => {
+                                    const catId = String(cat.category_id || cat.id);
+                                    const isActive = selectedCategory === catId;
+                                    return (
+                                        <button key={catId}
+                                            onClick={() => setSelectedCategory(isActive ? 'all' : catId)}
+                                            className={`w-full text-left px-4 py-3 rounded-xl text-sm font-bold transition-all flex items-center justify-between
+                                                ${isActive
+                                                    ? 'bg-homefix-primary text-white shadow-md'
+                                                    : 'text-homefix-text hover:bg-slate-50'}`}>
+                                            <span>{cat.category_name || cat.name}</span>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </aside>
+
+                    {/* ── RIGHT CONTENT ── */}
+                    <main className="flex-1 min-w-0">
+                        {error ? (
+                            <div className="text-center py-40 bg-white rounded-[3rem] border border-gray-100 shadow-xl shadow-gray-200/50">
+                                <div className="w-24 h-24 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-8">
+                                    <Wrench className="w-10 h-10 text-rose-400" />
                                 </div>
-                                {activeFiltersCount > 0 && (
-                                    <button onClick={resetAll}
-                                        className="mt-6 inline-flex items-center gap-2 text-xs font-black
-                                            text-rose-500 hover:text-rose-700 transition-colors uppercase tracking-widest">
-                                        <X className="w-4 h-4" />
-                                        Reset All Filters
-                                    </button>
-                                )}
+                                <h2 className="text-3xl font-black text-homefix-text mb-3">Something went wrong</h2>
+                                <p className="text-slate-400 text-base mb-10 max-w-md mx-auto">Failed to load services. Please try again.</p>
+                                <button onClick={() => window.location.reload()}
+                                    className="px-10 py-5 bg-homefix-primary text-white rounded-homepro font-black
+                                        text-sm hover:bg-homefix-accent shadow-premium transition-all">
+                                    Refresh Page
+                                </button>
                             </div>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-            </div>
-            <main className="max-w-7xl mx-auto px-6 md:px-12 py-16">
-                {error ? (
-                    <div className="text-center py-40 bg-white rounded-[3rem] border border-gray-100 shadow-xl shadow-gray-200/50">
-                        <div className="w-24 h-24 bg-rose-50 rounded-full flex items-center justify-center mx-auto mb-8">
-                            <Wrench className="w-10 h-10 text-rose-400" />
-                        </div>
-                        <h2 className="text-3xl font-black text-homefix-text mb-3">Something went wrong</h2>
-                        <p className="text-slate-400 text-base mb-10 max-w-md mx-auto">Failed to load services. Please try again.</p>
-                        <button onClick={() => window.location.reload()}
-                            className="px-10 py-5 bg-homefix-primary text-white rounded-homepro font-black
-                                text-sm hover:bg-homefix-accent shadow-premium transition-all">
-                            Refresh Page
-                        </button>
-                    </div>
-                ) : loading ? (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                        {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
-                    </div>
-                ) : filtered.length === 0 ? (
-                    <div className="text-center py-40 bg-white rounded-[3rem] border border-gray-100 shadow-xl shadow-gray-200/50">
-                        <div className="w-24 h-24 bg-homefix-primary/8 rounded-full flex items-center justify-center mx-auto mb-8">
-                            <Search className="w-10 h-10 text-homefix-primary/40" />
-                        </div>
-                        <h2 className="text-3xl font-black text-homefix-text mb-3">No results found</h2>
-                        <p className="text-slate-400 text-base mb-10 max-w-md mx-auto">
-                            No services match your current filters or search query.
-                        </p>
-                        <button onClick={resetAll}
-                            className="px-10 py-5 bg-homefix-primary text-white rounded-homepro font-black
-                                text-sm hover:bg-homefix-accent shadow-premium transition-all">
-                            Reset Filters
-                        </button>
-                    </div>
-                ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                        {filtered.map((service, index) => (
-                            <ServiceCard
-                                key={service.id || service.service_id || index}
-                                service={service}
-                                index={index}
-                            />
-                        ))}
-                    </div>
-                )}
-            </main>
-            {!loading && !error && (
-                <div className="max-w-7xl mx-auto px-6 md:px-12 pb-20">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        className="relative bg-homefix-primary rounded-[2.5rem] p-12 md:p-16
-                            overflow-hidden shadow-premium text-center"
-                    >
-                        <div className="absolute top-0 right-0 w-80 h-80 bg-homefix-accent/20
-                            rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5
-                            rounded-full blur-2xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
-                        <div className="relative z-10">
-                            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15
-                                text-blue-200 text-[11px] font-black uppercase tracking-[0.3em]
-                                px-4 py-2 rounded-full mb-6">
-                                <Sparkles className="w-3.5 h-3.5" />
-                                Need a hand?
+                        ) : loading ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                                {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
                             </div>
-                            <h2 className="text-white text-3xl md:text-4xl font-black mb-4 leading-tight">
-                                Book a professional <br className="hidden md:block" />in minutes
-                            </h2>
-                            <p className="text-blue-100/80 text-base mb-10 max-w-xl mx-auto font-medium">
-                                Transparent pricing. Verified experts. Satisfaction guaranteed — or we'll make it right.
-                            </p>
-                            <div className="flex flex-wrap justify-center gap-4">
-                                <Link to="/providers"
-                                    className="px-8 py-4 bg-white text-homefix-primary rounded-homepro font-black
-                                        text-sm hover:bg-blue-50 shadow-xl transition-all">
-                                    Meet Our Experts
-                                </Link>
-                                <Link to="/categories"
-                                    className="px-8 py-4 bg-homefix-accent/80 text-white rounded-homepro font-black
-                                        text-sm hover:bg-homefix-accent border border-white/10 shadow-xl transition-all">
-                                    Browse Categories
-                                </Link>
+                        ) : filtered.length === 0 ? (
+                            <div className="text-center py-40 bg-white rounded-[3rem] border border-gray-100 shadow-xl shadow-gray-200/50">
+                                <div className="w-24 h-24 bg-homefix-primary/8 rounded-full flex items-center justify-center mx-auto mb-8">
+                                    <Search className="w-10 h-10 text-homefix-primary/40" />
+                                </div>
+                                <h2 className="text-3xl font-black text-homefix-text mb-3">No results found</h2>
+                                <p className="text-slate-400 text-base mb-10 max-w-md mx-auto">
+                                    No services match your current filters or search query.
+                                </p>
+                                <button onClick={resetAll}
+                                    className="px-10 py-5 bg-homefix-primary text-white rounded-homepro font-black
+                                        text-sm hover:bg-homefix-accent shadow-premium transition-all">
+                                    Reset Filters
+                                </button>
                             </div>
-                        </div>
-                    </motion.div>
+                        ) : (
+                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+                                {filtered.map((service, index) => (
+                                    <ServiceCard
+                                        key={service.id || service.service_id || index}
+                                        service={service}
+                                        index={index}
+                                    />
+                                ))}
+                            </div>
+                        )}
+
+                        {/* CTA Banner */}
+                        {!loading && !error && (
+                            <motion.div
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                className="relative bg-homefix-primary rounded-[2.5rem] p-12 md:p-16
+                                    overflow-hidden shadow-premium text-center mt-12"
+                            >
+                                <div className="absolute top-0 right-0 w-80 h-80 bg-homefix-accent/20
+                                    rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+                                <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5
+                                    rounded-full blur-2xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+                                <div className="relative z-10">
+                                    <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15
+                                        text-blue-200 text-[11px] font-black uppercase tracking-[0.3em]
+                                        px-4 py-2 rounded-full mb-6">
+                                        <Sparkles className="w-3.5 h-3.5" />
+                                        Need a hand?
+                                    </div>
+                                    <h2 className="text-white text-3xl md:text-4xl font-black mb-4 leading-tight">
+                                        Book a professional <br className="hidden md:block" />in minutes
+                                    </h2>
+                                    <p className="text-blue-100/80 text-base mb-10 max-w-xl mx-auto font-medium">
+                                        Transparent pricing. Verified experts. Satisfaction guaranteed — or we'll make it right.
+                                    </p>
+                                    <div className="flex flex-wrap justify-center gap-4">
+                                        <Link to="/providers"
+                                            className="px-8 py-4 bg-white text-homefix-primary rounded-homepro font-black
+                                                text-sm hover:bg-blue-50 shadow-xl transition-all">
+                                            Meet Our Experts
+                                        </Link>
+                                        <Link to="/categories"
+                                            className="px-8 py-4 bg-homefix-accent/80 text-white rounded-homepro font-black
+                                                text-sm hover:bg-homefix-accent border border-white/10 shadow-xl transition-all">
+                                            Browse Categories
+                                        </Link>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+                    </main>
                 </div>
-            )}
+            </div>
         </div>
     );
 }
