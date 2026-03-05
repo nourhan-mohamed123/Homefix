@@ -7,10 +7,9 @@ import {
     CheckCircle2
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import PageHero from '../components/PageHero';
 import { motion, AnimatePresence } from 'framer-motion';
 import { apiCall, API_BASE_URL, API_ENDPOINTS } from '../config/api.js';
-import useMakeWebhook from '../hooks/useMakeWebhook';
-import MarqueeSlider from '../components/MarqueeSlider';
 
 const getFullImageUrl = (imagePath, name) => {
     if (!imagePath) return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || 'Provider')}&background=1E3A8A&color=fff&size=512`;
@@ -24,32 +23,7 @@ const SORT_OPTIONS = [
     { value: 'experience_desc', label: 'Most Experienced', icon: TrendingUp },
 ];
 
-const FALLBACK_PROVIDER_IMAGES = [
-    { name: 'Ahmed Hassan', image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=400&h=400&auto=format&fit=crop' },
-    { name: 'Sara Mohamed', image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&h=400&auto=format&fit=crop' },
-    { name: 'Amr Khaled', image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=400&h=400&auto=format&fit=crop' },
-    { name: 'Nour Ali', image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&h=400&auto=format&fit=crop' },
-];
 
-function ProviderAvatarCard({ item }) {
-    return (
-        <div className="flex-shrink-0 mx-4 group cursor-pointer">
-            <div className="relative w-28 h-28 rounded-full overflow-hidden border border-white/10
-                transition-all duration-700 group-hover:scale-110 group-hover:border-homefix-accent/40
-                shadow-2xl shadow-black/40 bg-slate-800">
-                <img
-                    src={item.image} alt={item.name}
-                    className="w-full h-full object-cover opacity-70 group-hover:opacity-100
-                        transition-all duration-1000 group-hover:scale-110"
-                    onError={(e) => { e.target.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(item.name)}&background=1E3A8A&color=fff&size=256`; }}
-                />
-            </div>
-            <p className="text-white/40 text-[10px] font-black text-center mt-3 uppercase tracking-widest group-hover:text-homefix-accent transition-colors">
-                {item.name}
-            </p>
-        </div>
-    );
-}
 
 function ProviderCard({ provider, index }) {
     const rating = provider.rating || '4.9';
@@ -160,50 +134,26 @@ function SkeletonCard() {
 }
 
 function ProvidersHero() {
-    const { data: sliderData } = useMakeWebhook('provider');
-    const sliderItems = (sliderData && sliderData.length > 0) ? sliderData : FALLBACK_PROVIDER_IMAGES;
+
 
     return (
-        <section className="relative bg-[#0F172A] pt-28 pb-20 overflow-hidden selection:bg-homefix-accent/30">
-            <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-homefix-primary/10 rounded-full blur-[140px] -translate-y-1/2 translate-x-1/2" />
-            <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-homefix-accent/5 rounded-full blur-[120px] translate-y-1/2 -translate-x-1/2" />
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
-                style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '40px 40px' }}
+        <>
+            <PageHero
+                badge={{ icon: ShieldCheck, label: 'Expert Network' }}
+                title="Meet Our"
+                titleAccent="Verified Experts."
+                subtitle="Connect with top-rated professionals dedicated to excellence in every home maintenance and repair task."
+                breadcrumb="Providers"
+                imageUrl="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1600&auto=format&fit=crop"
+                imageAlt="Professional home service expert"
+                stats={[
+                    { value: '200+', label: 'Verified Pros' },
+                    { value: '98%', label: 'Satisfaction' },
+                    { value: '4.9★', label: 'Avg Rating' },
+                ]}
             />
 
-            <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12">
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8 }}
-                    className="max-w-3xl mb-16"
-                >
-                    <div className="flex items-center gap-3 mb-6">
-                        <span className="h-px w-12 bg-homefix-accent" />
-                        <span className="text-homefix-accent text-xs font-black uppercase tracking-[0.4em]">Expert Network</span>
-                    </div>
-                    <h1 className="text-white text-5xl md:text-7xl font-black mb-8 leading-[1.1] tracking-tight">
-                        Meet Our <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-homefix-accent via-blue-400 to-homefix-accent animate-gradient-x">
-                            Verified Experts.
-                        </span>
-                    </h1>
-                    <p className="text-slate-400 text-lg md:text-xl max-w-xl font-medium leading-relaxed mb-10">
-                        Connect with top-rated professionals dedicated to excellence in every home maintenance and repair task.
-                    </p>
-                </motion.div>
-            </div>
-
-            <div className="relative z-10">
-                <MarqueeSlider
-                    items={sliderItems}
-                    direction="left"
-                    speed={25}
-                    renderCard={(item) => <ProviderAvatarCard item={item} />}
-                    className="mask-fade-edges"
-                />
-            </div>
-        </section>
+        </>
     );
 }
 
