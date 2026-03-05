@@ -9,57 +9,69 @@ const getFullImageUrl = (imagePath) => {
     if (imagePath.startsWith('http')) return imagePath;
     return `${API_BASE_URL}${imagePath.startsWith('/') ? '' : '/'}${imagePath}`;
 };
-const ACCENT = {
-    bg: 'bg-blue-50', text: 'text-blue-600',
-    border: 'border-blue-100', shadow: 'hover:shadow-blue-200/40',
-    ring: 'ring-blue-400/30', dot: 'bg-homefix-primary'
+const cardEntryVariant = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
 };
-function CategoryCard({ category, index }) {
+
+const staggerContainer = {
+    hidden: {},
+    visible: {
+        transition: { staggerChildren: 0.07 },
+    },
+};
+
+const springTransition = {
+    type: 'spring',
+    stiffness: 100,
+    damping: 15,
+};
+
+function CategoryCard({ category }) {
     const categoryId = category.category_id || category.id;
     return (
         <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: index * 0.05 }}
+            variants={cardEntryVariant}
+            transition={springTransition}
+            whileHover={{
+                scale: 1.02,
+                boxShadow: '0 8px 30px rgba(59,130,246,0.18)',
+            }}
+            className="will-change-transform"
         >
             <Link
                 to={`/services?category=${categoryId}`}
-                className={`group relative bg-white rounded-[2rem] overflow-hidden border ${ACCENT.border}
-                    shadow-sm ${ACCENT.shadow} hover:shadow-2xl transition-all duration-500
-                    flex flex-col items-center text-center cursor-pointer font-['Poppins']
-                    hover:-translate-y-2 block`}
+                className="group relative bg-white rounded-[2.5rem] p-2 overflow-hidden border border-blue-100
+                    shadow-sm transition-all duration-500 flex flex-col items-center text-center cursor-pointer font-['Poppins'] block"
             >
-                <div className={`absolute -top-12 -right-12 w-40 h-40 ${ACCENT.bg} rounded-full opacity-70
-                    group-hover:scale-150 transition-transform duration-700 pointer-events-none`} />
-                <div className={`absolute -bottom-8 -left-8 w-28 h-28 ${ACCENT.bg} rounded-full opacity-40
-                    group-hover:scale-150 transition-transform duration-700 pointer-events-none`} />
-                <div className={`relative z-10 w-28 h-28 mt-10 mb-5 rounded-[1.75rem] overflow-hidden
-                    ring-4 ${ACCENT.ring} shadow-lg group-hover:scale-110 group-hover:-translate-y-1
-                    transition-all duration-500`}>
+                <div className="absolute -top-12 -right-12 w-32 h-32 bg-blue-50 rounded-full opacity-40
+                    group-hover:scale-150 transition-transform duration-700 pointer-events-none" />
+
+                <div className="relative z-10 w-28 h-28 mt-8 mb-5 rounded-[2rem] overflow-hidden
+                    ring-4 ring-blue-400/30 shadow-lg transition-all duration-500">
                     <img src={getFullImageUrl(category.image)} alt={category.name}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         onError={e => e.target.src = 'https://placehold.co/400x400?text=Category'} />
                 </div>
 
-                <h3 className={`relative z-10 text-lg font-extrabold text-homefix-text mb-2
-                    group-hover:${ACCENT.text} transition-colors duration-300 px-4 line-clamp-1`}>
+                <h3 className="relative z-10 text-lg font-black text-homefix-text mb-2
+                    group-hover:text-homefix-primary transition-colors duration-300 px-4 line-clamp-1">
                     {category.name}
                 </h3>
                 {category.description && (
-                    <p className="relative z-10 text-gray-400 text-xs font-medium leading-relaxed px-6 mb-4 line-clamp-2">
+                    <p className="relative z-10 text-slate-400 text-xs font-medium leading-relaxed px-6 mb-4 line-clamp-2">
                         {category.description}
                     </p>
                 )}
-                <div className={`relative z-10 mb-8 mt-auto flex items-center gap-1.5 text-xs font-bold
-                    uppercase tracking-wider ${ACCENT.text} opacity-0 group-hover:opacity-100
-                    translate-y-2 group-hover:translate-y-0 transition-all duration-300`}>
+                <div className="relative z-10 mb-6 mt-auto flex items-center gap-1.5 text-[10px] font-black
+                    uppercase tracking-[0.2em] text-homefix-accent opacity-0 group-hover:opacity-100
+                    translate-y-2 group-hover:translate-y-0 transition-all duration-300">
                     Browse Services
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
                 </div>
 
-                <div className={`absolute bottom-0 left-0 right-0 h-1 ${ACCENT.dot}
-                    scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left`} />
+                <div className="absolute bottom-0 left-0 right-0 h-1 bg-homefix-primary
+                    scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
             </Link>
         </motion.div>
     );
@@ -76,9 +88,9 @@ function SkeletonCard() {
 }
 export default function CategoriesPage() {
     const [categories, setCategories] = useState([]);
-    const [loading, setLoading]       = useState(true);
-    const [search, setSearch]         = useState('');
-    const [error, setError]           = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [search, setSearch] = useState('');
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         (async () => {
@@ -180,24 +192,27 @@ export default function CategoriesPage() {
                         )}
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        {filtered.map((cat, index) => (
-                            <CategoryCard key={cat.category_id} category={{ ...cat, name: cat.category_name || cat.name }} index={index} />
+                    <motion.div
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+                        variants={staggerContainer}
+                        initial="hidden"
+                        animate="visible"
+                    >
+                        {filtered.map((cat) => (
+                            <CategoryCard key={cat.category_id} category={{ ...cat, name: cat.category_name || cat.name }} />
                         ))}
-                    </div>
+                    </motion.div>
                 )}
             </div>
             {!loading && !error && (
                 <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 pb-20">
                     <motion.div
                         initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                        className="relative bg-homefix-primary rounded-[2.5rem] p-12 md:p-16
-                            overflow-hidden shadow-premium text-center"
+                        className="relative bg-gradient-to-br from-homefix-primary via-[#1a3578] to-homefix-accent rounded-[2.5rem] p-12 md:p-16
+                            overflow-hidden shadow-2xl text-center"
                     >
-                        <div className="absolute top-0 right-0 w-80 h-80 bg-homefix-accent/20
-                            rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
-                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/5
-                            rounded-full blur-2xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
+                        <div className="absolute -top-10 -right-10 w-52 h-52 bg-white/5 rounded-full pointer-events-none" />
+                        <div className="absolute -bottom-12 -left-12 w-64 h-64 bg-white/5 rounded-full pointer-events-none" />
                         <div className="relative z-10">
                             <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15
                                 text-blue-200 text-[11px] font-black uppercase tracking-[0.3em]
@@ -207,18 +222,19 @@ export default function CategoriesPage() {
                             <h2 className="text-white text-3xl md:text-4xl font-black mb-4 leading-tight">
                                 Find a professional<br className="hidden md:block" /> for any home job
                             </h2>
-                            <p className="text-blue-100/80 text-base mb-10 max-w-xl mx-auto font-medium">
+                            <p className="text-white/80 text-base mb-10 max-w-xl mx-auto font-light">
                                 Browse services, compare providers, and book in minutes — all in one place.
                             </p>
                             <div className="flex flex-wrap justify-center gap-4">
                                 <Link to="/services"
-                                    className="px-8 py-4 bg-white text-homefix-primary rounded-homepro font-black
-                                        text-sm hover:bg-blue-50 shadow-xl transition-all">
+                                    className="inline-flex items-center gap-2 bg-white text-homefix-primary px-8 py-4 rounded-xl font-black
+                                        text-sm tracking-widest shadow-xl hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-300">
                                     Explore Services
+                                    <ArrowRight className="w-4 h-4" />
                                 </Link>
                                 <Link to="/providers"
-                                    className="px-8 py-4 bg-homefix-accent/80 text-white rounded-homepro font-black
-                                        text-sm hover:bg-homefix-accent border border-white/10 shadow-xl transition-all">
+                                    className="inline-flex items-center gap-2 bg-transparent border-2 border-white/40 text-white px-8 py-4 rounded-xl font-black
+                                        text-sm tracking-widest hover:bg-white/10 hover:border-white transition-all duration-300">
                                     Meet Providers
                                 </Link>
                             </div>

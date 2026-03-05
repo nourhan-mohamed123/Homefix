@@ -1,8 +1,25 @@
 import React from 'react';
 import { ArrowRight, Star, Loader2, Wrench, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { API_BASE_URL } from '../config/api.js';
+const popCardVariant = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 },
+};
 
+const popStaggerContainer = {
+    hidden: {},
+    visible: {
+        transition: { staggerChildren: 0.07 },
+    },
+};
+
+const popSpring = {
+    type: 'spring',
+    stiffness: 100,
+    damping: 15,
+};
 const getFullImageUrl = (imagePath) => {
     if (!imagePath) return 'https://placehold.co/600x400?text=HomeFix';
     if (imagePath.startsWith('http')) return imagePath;
@@ -16,7 +33,16 @@ function ServiceCard({ service }) {
     const image = service.cover_image || service.image;
 
     return (
-        <div className="group bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl hover:shadow-gray-200/40 transition-all duration-500 flex flex-col font-['Poppins']">
+        <motion.div
+            variants={popCardVariant}
+            transition={popSpring}
+            whileHover={{
+                scale: 1.02,
+                boxShadow: '0 8px 30px rgba(59,130,246,0.18)',
+            }}
+            className="group bg-white rounded-[2rem] overflow-hidden border border-gray-100 shadow-sm
+                flex flex-col font-['Poppins'] will-change-transform"
+        >
             <div className="relative h-48 overflow-hidden bg-gray-100">
                 <img
                     src={getFullImageUrl(image)}
@@ -65,7 +91,7 @@ function ServiceCard({ service }) {
                     </button>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }
 
@@ -73,7 +99,13 @@ export default function PopularServices({ services = [], loading = false }) {
     return (
         <section id="services" className="bg-white px-6 py-20 md:px-12 lg:px-20 font-['Poppins']">
             <div className="max-w-7xl mx-auto">
-                <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+                <motion.div
+                    className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={popSpring}
+                >
                     <div className="space-y-2">
                         <h2 className="text-homefix-text text-3xl md:text-5xl font-black tracking-tight">
                             Popular <span className="text-homefix-primary">Services</span>
@@ -83,7 +115,7 @@ export default function PopularServices({ services = [], loading = false }) {
                         View All Services
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </Link>
-                </div>
+                </motion.div>
                 {loading ? (
                     <div className="flex flex-col items-center py-32 gap-4">
                         <div className="relative">
@@ -99,11 +131,17 @@ export default function PopularServices({ services = [], loading = false }) {
                         <p className="text-gray-400 text-sm">Please check back later or refresh the page.</p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                        {services.map((service, index) => (
-                            <ServiceCard key={service.id || service.service_id || index} service={service} />
+                    <motion.div
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+                        variants={popStaggerContainer}
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true, amount: 0.1 }}
+                    >
+                        {services.map((service) => (
+                            <ServiceCard key={service.id || service.service_id} service={service} />
                         ))}
-                    </div>
+                    </motion.div>
                 )}
             </div>
         </section>

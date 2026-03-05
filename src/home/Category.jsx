@@ -64,11 +64,11 @@ export default function Category({ categories = [], loading = false }) {
                 <header className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
                     <div className="space-y-4">
                         <h2 className="text-[#1e293b] text-4xl md:text-6xl font-black tracking-tight leading-tight">
-                            What do you <span className="text-blue-600">need?</span>
+                            What do you <span className="text-homefix-primary">need?</span>
                         </h2>
                     </div>
                     <Link to="/categories" className="group flex items-center gap-3 px-8 py-4 bg-white text-[#1e293b]
-                        rounded-2xl font-extrabold text-sm hover:bg-blue-600 hover:text-white
+                        rounded-2xl font-extrabold text-sm hover:bg-homefix-primary hover:text-white
                         transition-all duration-500 shadow-xl shadow-blue-900/5 border border-slate-50">
                         View All
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
