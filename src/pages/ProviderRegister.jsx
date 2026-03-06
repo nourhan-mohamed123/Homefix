@@ -6,32 +6,14 @@ import { ServicesManager } from '../provider-register/ServicesManager.jsx';
 import TabNavigation from '../provider-register/TabNavigation.jsx';
 import FinalConfirmationModal from '../provider-register/FinalConfirmationModal.jsx';
 import Logo from '../components/Logo.jsx';
-
 export default function ProviderRegister() {
     const {
-        formData,
-        services,
-        activeTab,
-        isConfirmOpen,
-        registerError,
-        isSubmitting,
-        setActiveTab,
-        setIsConfirmOpen,
-        setRegisterError,
-        handleChange,
-        handleServiceAreaChange,
-        handleNext,
-        handleBack,
-        handleAddService,
-        handleEditService,
-        handleDeleteService,
-        handleSkipForLater,
-        handleSubmit,
-        syncWithIntegromat,
-        cities,
-        allServices
+        formData,services,activeTab,isConfirmOpen, registerError,isSubmitting,
+        setActiveTab,setIsConfirmOpen,setRegisterError, handleChange,handleServiceAreaChange,
+        handleNext,handleBack,handleAddService,handleEditService,handleDeleteService,
+        handleSkipForLater, handleSubmit, syncWithIntegromat,
+         cities,allServices
     } = useProviderRegister();
-
     return (
         <div className="min-h-screen bg-homefix-secondary flex items-center justify-center p-6 py-12 font-['Poppins']">
             <div className="w-full max-w-5xl bg-homefix-bg shadow-2xl overflow-hidden flex flex-col rounded-[2rem]">

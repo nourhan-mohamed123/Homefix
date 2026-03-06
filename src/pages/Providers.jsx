@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import PageHero from "../components/PageHero";
 import { motion, AnimatePresence } from "framer-motion";
 import { apiCall, API_BASE_URL, API_ENDPOINTS } from "../config/api.js";
-
 const getFullImageUrl = (imagePath, name) => {
   if (!imagePath)
     return `https://ui-avatars.com/api/?name=${encodeURIComponent(name || "Provider")}&background=1E3A8A&color=fff&size=512`;
@@ -51,7 +50,6 @@ function ProviderCard({ provider, index }) {
             </span>
           </div>
         </div>
-
         {provider.is_verified !== false && (
           <div className="absolute top-5 right-5 z-10 shadow-sm">
             <div className="bg-homefix-primary/95 backdrop-blur-xl px-4 py-2 rounded-2xl flex items-center gap-2">
@@ -62,10 +60,8 @@ function ProviderCard({ provider, index }) {
             </div>
           </div>
         )}
-
         <div className="absolute inset-0 bg-homefix-primary/5 group-hover:bg-homefix-primary/10 transition-all duration-500" />
       </div>
-
       <div className="p-8 flex flex-col flex-1">
         <div className="flex-1 space-y-3">
           <div className="flex items-center gap-2 text-homefix-accent mb-1">

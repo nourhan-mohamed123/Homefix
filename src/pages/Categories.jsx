@@ -114,7 +114,7 @@ export default function CategoriesPage() {
             (c.description || '').toLowerCase().includes(q));
     }, [categories, search]);
     return (
-        <div className="min-h-screen bg-homefix-bg font-['Poppins']">
+        <div className="min-h-screen bg-homefix-bg text-homefix-accent font-['Poppins']">
 
             <PageHero
                 badge={{ icon: LayoutDashboard, label: 'Service Categories' }}
@@ -128,24 +128,41 @@ export default function CategoriesPage() {
                     { value: '500+', label: 'Professionals' },
                     { value: '4.9★', label: 'Avg Rating' },
                 ]}
-            >                <div className="relative">
-                    <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
-                    <input type="text" placeholder="Search categories..." value={search}
+            >
+                <div className="relative max-w-2xl mx-auto group">
+                    <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none z-10">
+                        <Search className="w-5 h-5 text-white/40 group-focus-within:text-homefix-accent transition-colors" />
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="What are you looking for?"
+                        value={search}
                         onChange={e => setSearch(e.target.value)}
-                        className="w-full bg-white/8 backdrop-blur-md border border-white/12 text-white
-                            placeholder:text-white/30 py-4 pl-14 pr-10 rounded-2xl outline-none
-                            focus:ring-2 focus:ring-homefix-accent/40 focus:border-homefix-accent/30
-                            transition-all text-sm font-medium" />
-                    <AnimatePresence>
-                        {search && (
-                            <motion.button initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.8 }}
-                                onClick={() => setSearch('')}
-                                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors text-lg leading-none">
-                                ×
-                            </motion.button>
-                        )}
-                    </AnimatePresence>
+                        className="w-full bg-white/10 backdrop-blur-xl border border-white/15 text-white
+                            placeholder:text-white/30 py-5 pl-16 pr-32 rounded-[2rem] outline-none
+                            focus:ring-4 focus:ring-homefix-accent/20 focus:border-homefix-accent/30
+                            transition-all text-base font-semibold shadow-2xl shadow-black/20"
+                    />
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                        <AnimatePresence>
+                            {search && (
+                                <motion.button
+                                    initial={{ opacity: 0, x: 10 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 10 }}
+                                    onClick={() => setSearch('')}
+                                    className="p-2 text-white/40 hover:text-white transition-colors"
+                                >
+                                    <X className="w-5 h-5" />
+                                </motion.button>
+                            )}
+                        </AnimatePresence>
+                        <button className="bg-homefix-accent text-white px-6 py-3 rounded-2xl font-black
+                            text-xs uppercase tracking-widest shadow-lg shadow-homefix-accent/25
+                            hover:bg-white hover:text-homefix-primary transition-all duration-300">
+                            Search
+                        </button>
+                    </div>
                 </div>
             </PageHero>
             {!loading && !error && (

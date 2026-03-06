@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Logo from '../components/Logo';
 import { API_ENDPOINTS, apiCall } from '../config/api';
-
 const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -20,12 +19,10 @@ const Login = () => {
       [name]: type === 'checkbox' ? checked : value
     }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
     setLoading(true);
-
     try {
       const response = await apiCall(API_ENDPOINTS.AUTH.LOGIN, {
         method: 'POST',
@@ -44,12 +41,15 @@ const Login = () => {
       };
       const storage = formData.rememberMe ? localStorage : sessionStorage;
       storage.setItem('user', JSON.stringify(user));
+      const redirectTo = sessionStorage.getItem('redirectAfterLogin');
+      sessionStorage.removeItem('redirectAfterLogin');
+
       if (response.role === 'provider') {
-        navigate('/provider-dashboard');
+        navigate(redirectTo || '/provider-dashboard');
       } else if (response.role === 'admin') {
-        navigate('/');
+        navigate(redirectTo || '/');
       } else {
-        navigate('/');
+        navigate(redirectTo || '/');
       }
     } catch (err) {
       setError(err.message || 'Login failed. Please try again.');
@@ -57,7 +57,6 @@ const Login = () => {
       setLoading(false);
     }
   };
-
   return (
     <div className="min-h-screen bg-homefix-secondary flex items-center justify-center p-6 py-12 font-['Poppins']">
       <div className="w-full max-w-4xl bg-homefix-bg shadow-2xl overflow-hidden flex flex-col rounded-[2rem]">
@@ -113,7 +112,6 @@ const Login = () => {
                 />
               </div>
             </div>
-
             <div className="w-full flex justify-between items-center px-1">
               <div className="flex items-center gap-2">
                 <input
@@ -141,7 +139,6 @@ const Login = () => {
               >
                 {loading ? 'Logging in...' : 'Login'}
               </button>
-
               <div className="text-center space-y-4 pt-4 border-t border-gray-100 w-full">
                 <p className="text-homefix-text font-medium text-sm">
                   Don't have an account?

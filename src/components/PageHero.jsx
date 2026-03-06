@@ -35,10 +35,7 @@ const BG_IMAGES = [
         url: 'https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=1920&auto=format&fit=crop',
         label: 'Painting',
     },
-    {
-        url: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?q=80&w=1920&auto=format&fit=crop',
-        label: 'Landscaping',
-    },
+
     {
         url: 'https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=1920&auto=format&fit=crop',
         label: 'Home Repairs',
@@ -72,7 +69,6 @@ function AnimatedStat({ value, label, inView }) {
         </div>
     );
 }
-
 export default function PageHero({
     badge, title, titleAccent, subtitle,
     breadcrumb, stats = [], children,
@@ -248,8 +244,6 @@ export default function PageHero({
                                 ))}
                             </motion.div>
                         )}
-
-                        {/* Dots */}
                         <div className="flex items-center gap-2 pb-1">
                             {BG_IMAGES.map((_, i) => (
                                 <button

@@ -9,6 +9,7 @@ import CustomerRegister from './pages/customerRegister'
 import ProviderRegister from './pages/ProviderRegister'
 import Categories from './pages/Categories'
 import Services from './pages/Services'
+import ServiceDetail from "./pages/ServiceDetail";
 import Providers from './pages/Providers'
 const LayoutWrapper = ({ children }) => {
     const location = useLocation();
@@ -36,6 +37,7 @@ function App() {
                     <Route path="/categories" element={<Categories />} />
                     <Route path="/services" element={<Services />} />
                     <Route path="/providers" element={<Providers />} />
+                    <Route path="/services/:id" element={<ServiceDetail />} />
                     <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
             </LayoutWrapper>
