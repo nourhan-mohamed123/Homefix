@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import {
   Search, User, Star, MapPin, ShieldCheck, ArrowRight, Filter, SortAsc, TrendingUp, Award, Zap,
-  ChevronDown, X, Wrench, Briefcase, CheckCircle2, Phone, Calendar, MessageCircle,
+  ChevronDown, X, Wrench, Briefcase, CheckCircle2, Phone,
   Clock, ThumbsUp, BadgeCheck,
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -19,25 +19,30 @@ const SORT_OPTIONS = [
   { value: "rating_desc", label: "Highest Rated", icon: Award },
   { value: "experience_desc", label: "Most Experienced", icon: TrendingUp },
 ];
-/* ══════════════════════════════════════════
-   Provider Drawer / Bottom Sheet
-══════════════════════════════════════════ */
 function ProviderDrawer({ provider, onClose }) {
   const rating = parseFloat(provider.rating || 4.9);
   const name = provider.name || provider.full_name;
   const specialty = provider.specialty || "Service Professional";
   const city = provider.city || "Cairo, Egypt";
+  const isLoggedIn = () => {
+    try {
+      return !!(
+        localStorage.getItem("token") ||
+        localStorage.getItem("user") ||
+        sessionStorage.getItem("token") ||
+        sessionStorage.getItem("user")
+      );
+    } catch { return false; }
+  };
 
-  // Mock reviews — replace with real API data if available
   const reviews = provider.reviews || [
-    { id: 1, author: "Ahmed K.",   text: "Excellent work, very professional and on time!", stars: 5 },
-    { id: 2, author: "Sara M.",    text: "Great service, highly recommend!",               stars: 5 },
-    { id: 3, author: "Omar H.",    text: "Good quality, will book again.",                 stars: 4 },
+    { id: 1, author: "Ahmed K.", text: "Excellent work, very professional and on time!", stars: 5 },
+    { id: 2, author: "Sara M.", text: "Great service, highly recommend!", stars: 5 },
+    { id: 3, author: "Omar H.", text: "Good quality, will book again.", stars: 4 },
   ];
 
   return (
     <AnimatePresence>
-      {/* Backdrop */}
       <motion.div
         key="backdrop"
         className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
@@ -45,7 +50,6 @@ function ProviderDrawer({ provider, onClose }) {
         onClick={onClose}
       />
 
-      {/* Drawer */}
       <motion.div
         key="drawer"
         className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-[2.5rem] overflow-hidden font-['Poppins']"
@@ -55,15 +59,10 @@ function ProviderDrawer({ provider, onClose }) {
         exit={{ y: "100%" }}
         transition={{ type: "spring", stiffness: 300, damping: 32 }}
       >
-        {/* Drag handle */}
         <div className="flex justify-center pt-4 pb-2">
           <div className="w-12 h-1.5 rounded-full bg-slate-200" />
         </div>
-
-        {/* Scrollable body */}
         <div className="overflow-y-auto" style={{ maxHeight: "calc(92vh - 28px)" }}>
-
-          {/* ── Hero section ── */}
           <div className="relative h-56 overflow-hidden bg-slate-100">
             <img
               src={getFullImageUrl(provider.avatar_url || provider.image, name)}
@@ -72,8 +71,6 @@ function ProviderDrawer({ provider, onClose }) {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
             <div className="absolute inset-0" style={{ background: "rgba(30,58,138,0.18)" }} />
-
-            {/* Close button */}
             <button
               onClick={onClose}
               className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md
@@ -82,16 +79,12 @@ function ProviderDrawer({ provider, onClose }) {
             >
               <X className="w-4 h-4" />
             </button>
-
-            {/* Verified badge */}
             {provider.is_verified !== false && (
               <div className="absolute top-4 left-4 z-10 flex items-center gap-1.5 bg-homefix-primary/90
                 backdrop-blur-sm text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full">
                 <BadgeCheck className="w-3.5 h-3.5" /> Verified Pro
               </div>
             )}
-
-            {/* Name overlay */}
             <div className="absolute bottom-5 left-6 right-6 z-10">
               <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.2em] mb-1 flex items-center gap-1.5">
                 <Briefcase className="w-3 h-3" /> {specialty}
@@ -103,13 +96,11 @@ function ProviderDrawer({ provider, onClose }) {
               </div>
             </div>
           </div>
-
-          {/* ── Stats row ── */}
           <div className="grid grid-cols-3 divide-x divide-slate-100 border-b border-slate-100">
             {[
-              { icon: Star,    label: "Rating",      value: rating.toFixed(1) + "★" },
-              { icon: Clock,   label: "Response",    value: "< 2hr" },
-              { icon: ThumbsUp,label: "Completed",   value: "50+" },
+              { icon: Star, label: "Rating", value: rating.toFixed(1) + "★" },
+              { icon: Clock, label: "Response", value: "< 2hr" },
+              { icon: ThumbsUp, label: "Completed", value: "50+" },
             ].map(({ icon: Icon, label, value }) => (
               <div key={label} className="flex flex-col items-center py-5 gap-1">
                 <Icon className="w-4 h-4 text-homefix-primary mb-1" />
@@ -120,8 +111,6 @@ function ProviderDrawer({ provider, onClose }) {
           </div>
 
           <div className="px-6 py-6 space-y-7">
-
-            {/* ── About ── */}
             <div>
               <h3 className="text-sm font-black text-homefix-text mb-3 flex items-center gap-2">
                 <div className="w-1 h-4 rounded-full bg-homefix-primary" /> About
@@ -130,8 +119,6 @@ function ProviderDrawer({ provider, onClose }) {
                 {provider.bio || `${name} is a certified ${specialty.toLowerCase()} professional with years of hands-on experience. Known for punctuality, quality materials, and outstanding customer service.`}
               </p>
             </div>
-
-            {/* ── Skills ── */}
             <div>
               <h3 className="text-sm font-black text-homefix-text mb-3 flex items-center gap-2">
                 <div className="w-1 h-4 rounded-full bg-homefix-primary" /> Skills
@@ -145,8 +132,6 @@ function ProviderDrawer({ provider, onClose }) {
                 ))}
               </div>
             </div>
-
-            {/* ── Star rating visual ── */}
             <div>
               <h3 className="text-sm font-black text-homefix-text mb-3 flex items-center gap-2">
                 <div className="w-1 h-4 rounded-full bg-homefix-primary" /> Rating Breakdown
@@ -155,14 +140,14 @@ function ProviderDrawer({ provider, onClose }) {
                 <div className="text-center">
                   <p className="text-4xl font-black text-homefix-text">{rating.toFixed(1)}</p>
                   <div className="flex gap-0.5 justify-center my-1.5">
-                    {[1,2,3,4,5].map(i => (
+                    {[1, 2, 3, 4, 5].map(i => (
                       <Star key={i} className={`w-3.5 h-3.5 ${i <= Math.round(rating) ? "fill-amber-400 text-amber-400" : "fill-gray-200 text-gray-200"}`} />
                     ))}
                   </div>
                   <p className="text-[10px] text-slate-400 font-bold">{reviews.length}+ reviews</p>
                 </div>
                 <div className="flex-1 space-y-1.5">
-                  {[5,4,3,2,1].map(n => (
+                  {[5, 4, 3, 2, 1].map(n => (
                     <div key={n} className="flex items-center gap-2">
                       <span className="text-[10px] font-black text-slate-400 w-3">{n}</span>
                       <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
@@ -175,8 +160,6 @@ function ProviderDrawer({ provider, onClose }) {
                 </div>
               </div>
             </div>
-
-            {/* ── Reviews ── */}
             <div>
               <h3 className="text-sm font-black text-homefix-text mb-3 flex items-center gap-2">
                 <div className="w-1 h-4 rounded-full bg-homefix-primary" /> Reviews
@@ -185,7 +168,7 @@ function ProviderDrawer({ provider, onClose }) {
                 {reviews.map(r => (
                   <div key={r.id} className="bg-slate-50 rounded-2xl p-4">
                     <div className="flex gap-0.5 mb-2">
-                      {[1,2,3,4,5].map(i => (
+                      {[1, 2, 3, 4, 5].map(i => (
                         <Star key={i} className={`w-3 h-3 ${i <= r.stars ? "fill-amber-400 text-amber-400" : "fill-gray-200 text-gray-200"}`} />
                       ))}
                     </div>
@@ -196,25 +179,6 @@ function ProviderDrawer({ provider, onClose }) {
               </div>
             </div>
 
-            {/* ── CTA buttons ── */}
-            <div className="grid grid-cols-2 gap-3 pb-8">
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                className="flex items-center justify-center gap-2 bg-homefix-primary text-white
-                  py-4 rounded-2xl font-black text-sm uppercase tracking-wider
-                  hover:bg-homefix-accent transition-all duration-300 shadow-lg shadow-homefix-primary/20"
-              >
-                <Calendar className="w-4 h-4" /> Book Now
-              </motion.button>
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                className="flex items-center justify-center gap-2 border-2 border-homefix-primary/20
-                  text-homefix-primary py-4 rounded-2xl font-black text-sm uppercase tracking-wider
-                  hover:border-homefix-primary hover:bg-homefix-primary/5 transition-all duration-300"
-              >
-                <MessageCircle className="w-4 h-4" /> Message
-              </motion.button>
-            </div>
 
           </div>
         </div>
@@ -222,8 +186,6 @@ function ProviderDrawer({ provider, onClose }) {
     </AnimatePresence>
   );
 }
-
-
 function ProviderCard({ provider, index, onViewProfile }) {
   const rating = provider.rating || "4.9";
   const name = provider.name || provider.full_name;
@@ -544,11 +506,10 @@ export default function ProvidersPage() {
                           }}
                           className={`w-full text-left px-5 py-4 rounded-2xl text-sm font-bold
                                                         transition-all flex items-center justify-between
-                                                        ${
-                                                          sortBy === opt.value
-                                                            ? "bg-homefix-primary/10 text-homefix-primary"
-                                                            : "text-homefix-text hover:bg-slate-50"
-                                                        }`}
+                                                        ${sortBy === opt.value
+                              ? "bg-homefix-primary/10 text-homefix-primary"
+                              : "text-homefix-text hover:bg-slate-50"
+                            }`}
                         >
                           {opt.label}
                           {sortBy === opt.value && (

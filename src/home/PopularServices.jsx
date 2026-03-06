@@ -28,7 +28,6 @@ const getFullImageUrl = (imagePath) => {
 
 function ServiceCard({ service }) {
     const name = service.service_name || service.name;
-    const price = service.pricing?.[0]?.price ?? service.price ?? service.starting_price ?? '00';
     const rating = service.average_rating || service.rating || '4.9';
     const image = service.cover_image || service.image;
 
@@ -72,16 +71,7 @@ function ServiceCard({ service }) {
                         {service.description || 'Professional service by verified experts.'}
                     </p>
                 </div>
-                <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-                    <div className="flex flex-col">
-                        <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mb-0.5">Starting From</span>
-                        <div className="flex items-baseline gap-1">
-                            <span className="text-xs font-bold text-homefix-primary">EGP</span>
-                            <span className="text-2xl font-black text-homefix-text leading-none">
-                                {price}
-                            </span>
-                        </div>
-                    </div>
+                <div className="flex items-center justify-end pt-4 border-t border-gray-50">
                     <button
                         id={`book-service-${service.service_id || service.id}`}
                         className="relative overflow-hidden bg-homefix-primary text-white p-3 rounded-2xl font-bold transition-all duration-300 hover:bg-homefix-text hover:pr-8 group/btn"

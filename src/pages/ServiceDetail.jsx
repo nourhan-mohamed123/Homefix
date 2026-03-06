@@ -55,54 +55,7 @@ function ReviewCard({ review }) {
     </div>
   );
 }
-function PricingCard({ plan, onBook }) {
-  const isPopular = plan.label?.toLowerCase().includes("standard") || plan.is_popular;
-  return (
-    <motion.div
-      whileHover={{ y: -4, boxShadow: "0 20px 40px rgba(30,58,138,0.12)" }}
-      className={`relative rounded-[1.75rem] p-6 border transition-all duration-300 cursor-pointer
-        ${isPopular
-          ? "bg-homefix-primary border-homefix-primary text-white"
-          : "bg-white border-gray-100 text-homefix-text"}`}
-      style={{ boxShadow: isPopular ? "0 8px 32px rgba(30,58,138,0.25)" : "0 2px 16px rgba(30,58,138,0.05)" }}
-    >
-      {isPopular && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-          <span className="bg-homefix-accent text-white text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg">
-            Most Popular
-          </span>
-        </div>
-      )}
-      <p className={`text-xs font-black uppercase tracking-[0.2em] mb-2 ${isPopular ? "text-white/60" : "text-slate-400"}`}>
-        {plan.label || plan.plan_name || "Standard"}
-      </p>
-      <div className="flex items-baseline gap-1 mb-3">
-        <span className={`text-sm font-bold ${isPopular ? "text-white/70" : "text-homefix-primary"}`}>EGP</span>
-        <span className="text-4xl font-black tabular-nums">{plan.price ?? plan.amount ?? "---"}</span>
-      </div>
-      <p className={`text-xs font-medium leading-relaxed mb-5 ${isPopular ? "text-white/70" : "text-slate-400"}`}>
-        {plan.description || "Full service included with satisfaction guarantee."}
-      </p>
-      <ul className="space-y-2 mb-6">
-        {(plan.features || ["Professional service", "Insured & vetted", "Free follow-up"]).map((f, i) => (
-          <li key={i} className={`flex items-center gap-2 text-xs font-semibold ${isPopular ? "text-white/80" : "text-slate-500"}`}>
-            <CheckCircle2 className={`w-3.5 h-3.5 flex-shrink-0 ${isPopular ? "text-white/60" : "text-homefix-accent"}`} />
-            {f}
-          </li>
-        ))}
-      </ul>
-      <button
-        onClick={() => onBook(plan)}
-        className={`w-full py-3.5 rounded-[1rem] font-black text-sm uppercase tracking-wider transition-all duration-300
-          ${isPopular
-            ? "bg-white text-homefix-primary hover:bg-blue-50"
-            : "bg-homefix-primary text-white hover:bg-homefix-accent"}`}
-      >
-        Book This Plan
-      </button>
-    </motion.div>
-  );
-}
+
 
 export default function ServiceDetail() {
   const { id } = useParams();
@@ -185,17 +138,11 @@ export default function ServiceDetail() {
     );
   }
 
-  const name     = service.service_name || service.name || "Service";
-  const rating   = parseFloat(service.average_rating || service.rating || 4.9);
-  const price    = service.pricing?.[0]?.price ?? service.price ?? service.starting_price;
-  const image    = service.cover_image || service.image;
-  const pricing  = service.pricing?.length ? service.pricing : [
-    { label: "Basic",    price: price ?? 199, description: "Essential service package.", features: ["1 professional", "2hr session", "Basic materials"] },
-    { label: "Standard", price: price ? Math.round(price * 1.6) : 349, description: "Our most popular option.", features: ["2 professionals", "4hr session", "Premium materials", "Free follow-up"], is_popular: true },
-    { label: "Premium",  price: price ? Math.round(price * 2.4) : 599, description: "Complete end-to-end solution.", features: ["3 professionals", "Full day", "All materials", "2 follow-ups", "Priority support"] },
-  ];
+  const name = service.service_name || service.name || "Service";
+  const rating = parseFloat(service.average_rating || service.rating || 4.9);
+  const image = service.cover_image || service.image;
 
-  const TABS = ["overview", "pricing", "reviews"];
+  const TABS = ["overview", "reviews"];
 
   return (
     <div className="min-h-screen bg-homefix-bg font-['Poppins']">
@@ -256,7 +203,7 @@ export default function ServiceDetail() {
               className="flex flex-wrap items-center gap-4"
             >
               <div className="flex items-center gap-1.5 bg-white/15 backdrop-blur-sm px-3 py-2 rounded-xl">
-                {[1,2,3,4,5].map(i => (
+                {[1, 2, 3, 4, 5].map(i => (
                   <Star key={i} className={`w-3.5 h-3.5 ${i <= Math.round(rating) ? "fill-amber-400 text-amber-400" : "fill-white/30 text-white/30"}`} />
                 ))}
                 <span className="text-white font-black text-sm ml-1">{rating.toFixed(1)}</span>
@@ -348,14 +295,13 @@ export default function ServiceDetail() {
                 <div className="bg-white rounded-[1.75rem] p-6 border border-gray-100 sticky top-[90px]"
                   style={{ boxShadow: "0 8px 32px rgba(30,58,138,0.08)" }}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] text-slate-400 uppercase tracking-widest font-black">Starting from</span>
+                    <span className="text-[10px] text-slate-400 uppercase tracking-widest font-black">Availability</span>
                     <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 text-[10px] font-black px-2.5 py-1 rounded-full">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" /> Available
                     </span>
                   </div>
-                  <div className="flex items-baseline gap-1 mb-5">
-                    <span className="text-sm font-bold text-homefix-primary">EGP</span>
-                    <span className="text-4xl font-black text-homefix-text">{price ?? "---"}</span>
+                  <div className="mb-5">
+                    <p className="text-sm font-semibold text-slate-500">Book your appointment now to secure your slot with our experts.</p>
                   </div>
 
                   <button
@@ -388,40 +334,25 @@ export default function ServiceDetail() {
               </div>
             </motion.div>
           )}
-          {activeTab === "pricing" && (
-            <motion.div key="pricing"
-              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
-              transition={{ duration: 0.35 }}
-            >
-              <div className="text-center mb-10">
-                <h2 className="text-2xl md:text-3xl font-black text-homefix-text mb-2">Choose your plan</h2>
-                <p className="text-slate-400 text-sm font-medium">Transparent pricing, no hidden fees.</p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {pricing.map((plan, i) => (
-                  <PricingCard key={i} plan={plan} onBook={handleBook} />
-                ))}
-              </div>
-            </motion.div>
-          )}
+
           {activeTab === "reviews" && (
             <motion.div key="reviews"
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.35 }}
             >
-                            <div className="bg-white rounded-[1.75rem] p-8 border border-gray-100 mb-8 flex flex-col md:flex-row items-center gap-8"
+              <div className="bg-white rounded-[1.75rem] p-8 border border-gray-100 mb-8 flex flex-col md:flex-row items-center gap-8"
                 style={{ boxShadow: "0 2px 16px rgba(30,58,138,0.05)" }}>
                 <div className="text-center">
                   <p className="text-6xl font-black text-homefix-text">{rating.toFixed(1)}</p>
                   <div className="flex gap-1 justify-center my-2">
-                    {[1,2,3,4,5].map(i => (
+                    {[1, 2, 3, 4, 5].map(i => (
                       <Star key={i} className={`w-5 h-5 ${i <= Math.round(rating) ? "fill-amber-400 text-amber-400" : "fill-gray-200 text-gray-200"}`} />
                     ))}
                   </div>
                   <p className="text-xs text-slate-400 font-semibold">{reviews.length || "20"}+ reviews</p>
                 </div>
                 <div className="flex-1 space-y-2 w-full">
-                  {[5,4,3,2,1].map(n => (
+                  {[5, 4, 3, 2, 1].map(n => (
                     <div key={n} className="flex items-center gap-3">
                       <span className="text-xs font-black text-slate-400 w-4">{n}</span>
                       <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
