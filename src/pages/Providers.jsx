@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
 import {
-  Search,User,Star,MapPin,ShieldCheck,ArrowRight,Filter, SortAsc,TrendingUp, Award, Zap,
-  ChevronDown,X,Wrench,Briefcase,CheckCircle2,
+  Search, User, Star, MapPin, ShieldCheck, ArrowRight, Filter, SortAsc, TrendingUp, Award, Zap,
+  ChevronDown, X, Wrench, Briefcase, CheckCircle2, Phone, Calendar, MessageCircle,
+  Clock, ThumbsUp, BadgeCheck,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import PageHero from "../components/PageHero";
@@ -18,7 +19,212 @@ const SORT_OPTIONS = [
   { value: "rating_desc", label: "Highest Rated", icon: Award },
   { value: "experience_desc", label: "Most Experienced", icon: TrendingUp },
 ];
-function ProviderCard({ provider, index }) {
+/* ══════════════════════════════════════════
+   Provider Drawer / Bottom Sheet
+══════════════════════════════════════════ */
+function ProviderDrawer({ provider, onClose }) {
+  const rating = parseFloat(provider.rating || 4.9);
+  const name = provider.name || provider.full_name;
+  const specialty = provider.specialty || "Service Professional";
+  const city = provider.city || "Cairo, Egypt";
+
+  // Mock reviews — replace with real API data if available
+  const reviews = provider.reviews || [
+    { id: 1, author: "Ahmed K.",   text: "Excellent work, very professional and on time!", stars: 5 },
+    { id: 2, author: "Sara M.",    text: "Great service, highly recommend!",               stars: 5 },
+    { id: 3, author: "Omar H.",    text: "Good quality, will book again.",                 stars: 4 },
+  ];
+
+  return (
+    <AnimatePresence>
+      {/* Backdrop */}
+      <motion.div
+        key="backdrop"
+        className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+        onClick={onClose}
+      />
+
+      {/* Drawer */}
+      <motion.div
+        key="drawer"
+        className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-[2.5rem] overflow-hidden font-['Poppins']"
+        style={{ maxHeight: "92vh" }}
+        initial={{ y: "100%" }}
+        animate={{ y: 0 }}
+        exit={{ y: "100%" }}
+        transition={{ type: "spring", stiffness: 300, damping: 32 }}
+      >
+        {/* Drag handle */}
+        <div className="flex justify-center pt-4 pb-2">
+          <div className="w-12 h-1.5 rounded-full bg-slate-200" />
+        </div>
+
+        {/* Scrollable body */}
+        <div className="overflow-y-auto" style={{ maxHeight: "calc(92vh - 28px)" }}>
+
+          {/* ── Hero section ── */}
+          <div className="relative h-56 overflow-hidden bg-slate-100">
+            <img
+              src={getFullImageUrl(provider.avatar_url || provider.image, name)}
+              alt={name}
+              className="w-full h-full object-cover object-top"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+            <div className="absolute inset-0" style={{ background: "rgba(30,58,138,0.18)" }} />
+
+            {/* Close button */}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md
+                border border-white/20 text-white flex items-center justify-center
+                hover:bg-black/60 transition-all"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            {/* Verified badge */}
+            {provider.is_verified !== false && (
+              <div className="absolute top-4 left-4 z-10 flex items-center gap-1.5 bg-homefix-primary/90
+                backdrop-blur-sm text-white text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full">
+                <BadgeCheck className="w-3.5 h-3.5" /> Verified Pro
+              </div>
+            )}
+
+            {/* Name overlay */}
+            <div className="absolute bottom-5 left-6 right-6 z-10">
+              <p className="text-white/60 text-[10px] font-black uppercase tracking-[0.2em] mb-1 flex items-center gap-1.5">
+                <Briefcase className="w-3 h-3" /> {specialty}
+              </p>
+              <h2 className="text-white text-2xl font-black leading-tight">{name}</h2>
+              <div className="flex items-center gap-1.5 mt-1">
+                <MapPin className="w-3.5 h-3.5 text-white/50" />
+                <span className="text-white/60 text-xs font-semibold">{city}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* ── Stats row ── */}
+          <div className="grid grid-cols-3 divide-x divide-slate-100 border-b border-slate-100">
+            {[
+              { icon: Star,    label: "Rating",      value: rating.toFixed(1) + "★" },
+              { icon: Clock,   label: "Response",    value: "< 2hr" },
+              { icon: ThumbsUp,label: "Completed",   value: "50+" },
+            ].map(({ icon: Icon, label, value }) => (
+              <div key={label} className="flex flex-col items-center py-5 gap-1">
+                <Icon className="w-4 h-4 text-homefix-primary mb-1" />
+                <span className="text-lg font-black text-homefix-text">{value}</span>
+                <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{label}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="px-6 py-6 space-y-7">
+
+            {/* ── About ── */}
+            <div>
+              <h3 className="text-sm font-black text-homefix-text mb-3 flex items-center gap-2">
+                <div className="w-1 h-4 rounded-full bg-homefix-primary" /> About
+              </h3>
+              <p className="text-sm text-slate-400 font-medium leading-relaxed">
+                {provider.bio || `${name} is a certified ${specialty.toLowerCase()} professional with years of hands-on experience. Known for punctuality, quality materials, and outstanding customer service.`}
+              </p>
+            </div>
+
+            {/* ── Skills ── */}
+            <div>
+              <h3 className="text-sm font-black text-homefix-text mb-3 flex items-center gap-2">
+                <div className="w-1 h-4 rounded-full bg-homefix-primary" /> Skills
+              </h3>
+              <div className="flex flex-wrap gap-2">
+                {(provider.skills || [specialty, "On-time delivery", "Insured", "Background checked", "Free consultation"]).map((s, i) => (
+                  <span key={i} className="inline-flex items-center gap-1.5 bg-homefix-primary/8 text-homefix-primary
+                    text-xs font-bold px-3 py-1.5 rounded-full">
+                    <CheckCircle2 className="w-3 h-3" /> {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            {/* ── Star rating visual ── */}
+            <div>
+              <h3 className="text-sm font-black text-homefix-text mb-3 flex items-center gap-2">
+                <div className="w-1 h-4 rounded-full bg-homefix-primary" /> Rating Breakdown
+              </h3>
+              <div className="flex items-center gap-5 bg-slate-50 rounded-2xl p-4">
+                <div className="text-center">
+                  <p className="text-4xl font-black text-homefix-text">{rating.toFixed(1)}</p>
+                  <div className="flex gap-0.5 justify-center my-1.5">
+                    {[1,2,3,4,5].map(i => (
+                      <Star key={i} className={`w-3.5 h-3.5 ${i <= Math.round(rating) ? "fill-amber-400 text-amber-400" : "fill-gray-200 text-gray-200"}`} />
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-slate-400 font-bold">{reviews.length}+ reviews</p>
+                </div>
+                <div className="flex-1 space-y-1.5">
+                  {[5,4,3,2,1].map(n => (
+                    <div key={n} className="flex items-center gap-2">
+                      <span className="text-[10px] font-black text-slate-400 w-3">{n}</span>
+                      <Star className="w-2.5 h-2.5 fill-amber-400 text-amber-400" />
+                      <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
+                        <div className="h-full bg-amber-400 rounded-full"
+                          style={{ width: n === 5 ? "72%" : n === 4 ? "18%" : n === 3 ? "7%" : "3%" }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* ── Reviews ── */}
+            <div>
+              <h3 className="text-sm font-black text-homefix-text mb-3 flex items-center gap-2">
+                <div className="w-1 h-4 rounded-full bg-homefix-primary" /> Reviews
+              </h3>
+              <div className="space-y-3">
+                {reviews.map(r => (
+                  <div key={r.id} className="bg-slate-50 rounded-2xl p-4">
+                    <div className="flex gap-0.5 mb-2">
+                      {[1,2,3,4,5].map(i => (
+                        <Star key={i} className={`w-3 h-3 ${i <= r.stars ? "fill-amber-400 text-amber-400" : "fill-gray-200 text-gray-200"}`} />
+                      ))}
+                    </div>
+                    <p className="text-xs text-slate-500 font-medium leading-relaxed mb-2">&ldquo;{r.text}&rdquo;</p>
+                    <p className="text-[10px] font-black text-homefix-primary">{r.author}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* ── CTA buttons ── */}
+            <div className="grid grid-cols-2 gap-3 pb-8">
+              <motion.button
+                whileTap={{ scale: 0.97 }}
+                className="flex items-center justify-center gap-2 bg-homefix-primary text-white
+                  py-4 rounded-2xl font-black text-sm uppercase tracking-wider
+                  hover:bg-homefix-accent transition-all duration-300 shadow-lg shadow-homefix-primary/20"
+              >
+                <Calendar className="w-4 h-4" /> Book Now
+              </motion.button>
+              <motion.button
+                whileTap={{ scale: 0.97 }}
+                className="flex items-center justify-center gap-2 border-2 border-homefix-primary/20
+                  text-homefix-primary py-4 rounded-2xl font-black text-sm uppercase tracking-wider
+                  hover:border-homefix-primary hover:bg-homefix-primary/5 transition-all duration-300"
+              >
+                <MessageCircle className="w-4 h-4" /> Message
+              </motion.button>
+            </div>
+
+          </div>
+        </div>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+
+function ProviderCard({ provider, index, onViewProfile }) {
   const rating = provider.rating || "4.9";
   const name = provider.name || provider.full_name;
   const specialty = provider.specialty || "Service Professional";
@@ -40,23 +246,16 @@ function ProviderCard({ provider, index }) {
           className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
         />
         <div className="absolute top-5 left-5 z-10 flex flex-col gap-2">
-          <div
-            className="bg-white/95 backdrop-blur-xl px-3.5 py-2 rounded-2xl 
-                        flex items-center gap-2 shadow-sm border border-white/50"
-          >
+          <div className="bg-white/95 backdrop-blur-xl px-3.5 py-2 rounded-2xl flex items-center gap-2 shadow-sm border border-white/50">
             <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-            <span className="text-xs font-black text-homefix-text tracking-tight">
-              {rating}
-            </span>
+            <span className="text-xs font-black text-homefix-text tracking-tight">{rating}</span>
           </div>
         </div>
         {provider.is_verified !== false && (
           <div className="absolute top-5 right-5 z-10 shadow-sm">
             <div className="bg-homefix-primary/95 backdrop-blur-xl px-4 py-2 rounded-2xl flex items-center gap-2">
               <CheckCircle2 className="w-3.5 h-3.5 text-white" />
-              <span className="text-[10px] font-extrabold text-white uppercase tracking-[0.1em]">
-                Verified Pro
-              </span>
+              <span className="text-[10px] font-extrabold text-white uppercase tracking-[0.1em]">Verified Pro</span>
             </div>
           </div>
         )}
@@ -66,14 +265,9 @@ function ProviderCard({ provider, index }) {
         <div className="flex-1 space-y-3">
           <div className="flex items-center gap-2 text-homefix-accent mb-1">
             <Briefcase className="w-4 h-4" />
-            <span className="text-[10px] uppercase font-black tracking-widest">
-              {specialty}
-            </span>
+            <span className="text-[10px] uppercase font-black tracking-widest">{specialty}</span>
           </div>
-          <h3
-            className="text-2xl font-black text-homefix-text leading-tight
-                        group-hover:text-homefix-primary transition-colors duration-300"
-          >
+          <h3 className="text-2xl font-black text-homefix-text leading-tight group-hover:text-homefix-primary transition-colors duration-300">
             {name}
           </h3>
           <div className="flex items-center gap-2 text-slate-400 text-sm font-medium">
@@ -83,31 +277,26 @@ function ProviderCard({ provider, index }) {
         </div>
         <div className="mt-8 pt-6 border-t border-slate-50 flex items-center justify-between">
           <div className="flex flex-col">
-            <span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-black mb-1">
-              Availability
-            </span>
+            <span className="text-[10px] text-slate-400 uppercase tracking-[0.2em] font-black mb-1">Availability</span>
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-xs font-black text-homefix-text">
-                Available Now
-              </span>
+              <span className="text-xs font-black text-homefix-text">Available Now</span>
             </div>
           </div>
 
-          <Link
-            to={`/provider/${provider.id}`}
-            className="h-14 w-14 rounded-homepro bg-homefix-primary text-white flex items-center justify-center 
-                            shadow-premium hover:bg-homefix-accent transition-all duration-500 group/btn"
+          <motion.button
+            onClick={() => onViewProfile(provider)}
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.94 }}
+            className="h-14 w-14 rounded-[1.25rem] bg-homefix-primary text-white flex items-center justify-center
+              shadow-lg shadow-homefix-primary/25 hover:bg-homefix-accent transition-colors duration-300 group/btn"
           >
-            <ArrowRight className="w-6 h-6 group-hover/btn:translate-x-1.5 transition-transform duration-500" />
-          </Link>
+            <ArrowRight className="w-6 h-6 group-hover/btn:translate-x-1 transition-transform duration-300" />
+          </motion.button>
         </div>
       </div>
 
-      <div
-        className="absolute bottom-0 left-0 right-0 h-1 bg-homefix-primary
-                scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left"
-      />
+      <div className="absolute bottom-0 left-0 right-0 h-1 bg-homefix-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left" />
     </motion.div>
   );
 }
@@ -162,6 +351,7 @@ export default function ProvidersPage() {
   const [sortBy, setSortBy] = useState("default");
   const [sortOpen, setSortOpen] = useState(false);
   const [error, setError] = useState(null);
+  const [selectedProvider, setSelectedProvider] = useState(null);
 
   useEffect(() => {
     const fetchProviders = async () => {
@@ -429,6 +619,7 @@ export default function ProvidersPage() {
                 key={provider.id || index}
                 provider={provider}
                 index={index}
+                onViewProfile={setSelectedProvider}
               />
             ))}
           </div>
@@ -473,6 +664,12 @@ export default function ProvidersPage() {
             </div>
           </div>
         </div>
+      )}
+      {selectedProvider && (
+        <ProviderDrawer
+          provider={selectedProvider}
+          onClose={() => setSelectedProvider(null)}
+        />
       )}
     </div>
   );

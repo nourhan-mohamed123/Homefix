@@ -50,7 +50,7 @@ function AnimatedStat({ value, label, inView }) {
         const match = String(value).match(/^([^\d]*)(\d+(?:\.\d+)?)(.*)$/);
         if (!match) { setDisplay(value); return; }
         const prefix = match[1] || '';
-        const num    = parseFloat(match[2]);
+        const num = parseFloat(match[2]);
         const suffix = match[3] || '';
         const controls = animate(0, num, {
             duration: 2, ease: 'easeOut',
@@ -74,11 +74,11 @@ export default function PageHero({
     breadcrumb, stats = [], children,
 }) {
     const BadgeIcon = badge?.icon;
-    const statsRef  = useRef(null);
+    const statsRef = useRef(null);
     const [statsInView, setStatsInView] = useState(false);
-    const [currentImg, setCurrentImg]   = useState(0);
-    const [paused, setPaused]           = useState(false);
-    const [direction, setDirection]     = useState(1);
+    const [currentImg, setCurrentImg] = useState(0);
+    const [paused, setPaused] = useState(false);
+    const [direction, setDirection] = useState(1);
     useEffect(() => {
         if (paused) return;
         const id = setInterval(() => {
@@ -104,9 +104,9 @@ export default function PageHero({
     };
 
     const slideVariants = {
-        enter:  (d) => ({ x: d > 0 ? '100%' : '-100%' }),
-        center:       ({ x: 0 }),
-        exit:   (d) => ({ x: d > 0 ? '-8%' : '8%', opacity: 0.5 }),
+        enter: (d) => ({ x: d > 0 ? '100%' : '-100%' }),
+        center: ({ x: 0 }),
+        exit: (d) => ({ x: d > 0 ? '-8%' : '8%', opacity: 0.5 }),
     };
 
     return (
@@ -225,7 +225,7 @@ export default function PageHero({
                     <motion.div
                         initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: 0.25 }}
-                        className="max-w-xl mb-10"
+                        className="max-w-2xl mb-10"
                     >
                         {children}
                     </motion.div>

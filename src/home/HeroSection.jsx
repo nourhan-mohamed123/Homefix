@@ -112,7 +112,7 @@ export default function HeroSection() {
             <motion.h1
               variants={up}
               className="text-white text-4xl md:text-6xl lg:text-7xl font-black mb-6 leading-[1.08] tracking-tight"
-              style={{ textShadow: '0 2px 20px rgba(0,0,0,0.3)' }}
+              style={{ textShadow: '0 2px 20px rgba(21, 21, 21, 0.3)' }}
             >
               Your Home,{' '}
               <span className="text-homefix-accent">Better</span>{' '}
